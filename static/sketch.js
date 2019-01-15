@@ -64,8 +64,25 @@ var displayedTags = [];
   {name:'tangible',
   coordinates: {x:30, y:32}},
 ]*/
-//test tag name
-var tagName='tangible';
+var tagDisplayStart = {x:100, y:50};
+var tagDisplaySpace = 50;
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('#tag-display-form').onsubmit = () => {
+    let nextPosition = tagDisplayStart;
+    //find the next available spot in the default display position
+    for (let i = 0; i < displayedTags.length; i++) {
+      if( displayedTags[i].coordinates.x == nextPosition.x && displayedTags[i].coordinates.y == nextPosition.y ) {
+        nextPosition.y = nextPosition.y+tagDisplaySpace;
+      }
+    }
+    const tagName = document.querySelector('#tag-display-input').value; //from form
+    document.querySelector('#tag-display-input').value = "";
+    displayedTags.push({name: tagName, coordinates: {x: nextPosition.x, y: nextPosition.y}});
+    return false;
+  };
+});
+
 
 let csvTable;
 
@@ -78,10 +95,10 @@ function cleanTagList(tagList){
   },tagArray);
   return tagArray.join();
 }
+
 function preload() {
   csvTable = loadTable('./assets/testdata.csv', 'csv', 'header');
 }
-
 
 function setup() {
 
@@ -122,9 +139,10 @@ function setup() {
   //2 x 3 grid for the six categories
   var numRows = 2;
   var numCols = 3;
-  var gridX = width/numCols;
+  var padding = 200; //to make way for inserted tags
+  var gridX = (width-padding)/numCols;
   var gridY = height/numRows;
-  var startX = gridX/2;
+  var startX = padding + gridX/2;
   var startY = gridY/2;
   let r=0;
   let c=0;
@@ -287,6 +305,15 @@ function draw() {
       for (let j=0; j<item.catLineEndPts.length; j++) {
         line(item.coordinates.x,item.coordinates.y,item.catLineEndPts[j].x,item.catLineEndPts[j].y);
       }
+      push();
+      stroke(0, 0, 255);
+      for (let j = 0; j < displayedTags.length; j++) {
+        if(item.tags.includes(displayedTags[j].name)){
+          line(item.coordinates.x,item.coordinates.y,displayedTags[j].coordinates.x,displayedTags[j].coordinates.y);
+        }
+      }
+      pop();
+
     }
   }
 
@@ -324,20 +351,20 @@ function draw() {
       }
     }
   }
-  //place tagName text in the on top of screen
-  // push();
-  // fill(0);
-  // textSize(24);
-  // textAlign(CENTER);
-  // rectMode(CENTER);
-  // text(tagName,width/2,height/2);
-  // pop();
+
+  // place tagName text in the on top of screen
+  push();
+  fill(0);
+  textSize(24);
+  textAlign(CENTER);
+  rectMode(CENTER);
+  for (var i = 0; i < displayedTags.length; i++) {
+    text(displayedTags[i].name,displayedTags[i].coordinates.x,displayedTags[i].coordinates.y);
+  }
+  pop();
 
   //if that item has a tag sharing tagName, draw a line between that item
-  // stroke(0, 0, 255);
-  // if(csvTable.getString(i,'Tags').includes(tagName)){
-  //   line(loc[0],loc[1],width/2,height/2);
-  // }
+
 
 
 
