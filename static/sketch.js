@@ -58,6 +58,7 @@ var archive={}; //JSON so that the keys can be strings
 ]
 */
 
+var selectedCategories=[];
 var displayedTags = [];
 /*[
   {name:'tangible',
@@ -220,10 +221,14 @@ function mouseClicked(){
       }
       if (archive[category].active) {
         archive[category].active=false;
+        const remIndex = selectedCategories.indexOf(archive[category].name);
+        selectedCategories.splice(remIndex,1);
       }
       else{
         archive[category].active=true;
+        selectedCategories.push(archive[category].name);
       }
+      document.querySelector('#category-list').innerHTML=selectedCategories.join(', ');
     }
   }
 }
