@@ -181,6 +181,21 @@ function mouseClicked(){
     const x = archive[category].coordinates.x;
     const y = archive[category].coordinates.y;
     if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
+      for (let i=0; i<archive[category].items.length; i++){
+        const item = archive[category].items[i];
+        const itemRadius = itemDia/2;
+        const itemX = item.coordinates.x;
+        const itemY = item.coordinates.y;
+        if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius)){
+          if (item.active) {
+            item.active=false;
+          }
+          else{
+            item.active=true;
+          }
+        }
+
+      }
       if (archive[category].active) {
         archive[category].active=false;
       }
@@ -200,11 +215,11 @@ function draw() {
     const y = archive[category].coordinates.y;
 
     if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
-      fill(0.85*255);
+      fill(229, 255, 255);
     }
     else{
       if (archive[category].active) {
-        fill(0.85*255);
+        fill(204, 255, 255);
       }
       else{
         fill(0.9*255);
@@ -244,14 +259,37 @@ function draw() {
   }
 
   noStroke();
-  fill(0.7*255);
+
   for (category in archive) {
     //for each item in the category
     for (let i=0; i<archive[category].items.length; i++) {
       const item = archive[category].items[i];
+      const radius = itemDia/2;
+      const x = item.coordinates.x;
+      const y = item.coordinates.y;
+
+      if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
+        fill(0);
+      }
+      else{
+        if (item.active) {
+          fill(51, 204, 255);
+        }
+        else{
+          fill(0,0.3*255);
+        }
+      }
 
       //draw items
       ellipse(item.coordinates.x,item.coordinates.y,itemDia,itemDia);
+
+      //add text on mouse hover
+      if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
+        textSize(12);
+        textAlign(LEFT);
+        rectMode(CORNER);
+        text(item.title,x,y-12);
+      }
     }
   }
   //place tagName text in the on top of screen
