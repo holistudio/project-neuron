@@ -6,7 +6,7 @@ var categoryNames = [
   'physical design',
   'interface',
   'occupant initiative'];
-var categoryDia = 300;
+var categoryDia = 200;
 var itemDia = 10;
 var archive={}; //JSON so that the keys can be strings
 /* {
@@ -105,7 +105,7 @@ function setup() {
     }
   }
 
-  createCanvas(1150, 768);
+  createCanvas(1150*1.25, 768*1.25);
   //calculate where the category abd item circle centers are
   //2 x 3 grid for the six categories
   var numRows = 2;
@@ -118,7 +118,7 @@ function setup() {
   let c=0;
   for (category in archive) {
     //category diameter is in proportion to the number of items
-    archive[category]["diameter"] = map(archive[category].numItems,0,maxNumItems,100,categoryDia);
+    archive[category]["diameter"] = map(archive[category].numItems,0,maxNumItems,75,categoryDia);
     archive[category]["coordinates"] = {x: startX+c*gridX, y:startY+r*gridY}
 
     //for each item in the category
