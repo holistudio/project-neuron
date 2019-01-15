@@ -90,7 +90,7 @@ function setup() {
     const itemCategory = csvTable.getString(i,'category');
     //if that category isn't in archive, add it to archive
     if(archive[itemCategory] == undefined){
-      archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[]}
+      archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[], "active":false}
     }
 
     //add the item to appropriate category's items list
@@ -101,6 +101,7 @@ function setup() {
     archive[itemCategory].items[itemIndex]["coordinates"]={};
     archive[itemCategory].items[itemIndex]["catLineEndPts"]=[];
     archive[itemCategory].items[itemIndex]["tagLineEndPts"]=[];
+    archive[itemCategory].items[itemIndex]["active"]=false;
 
     archive[itemCategory].items[itemIndex].tags=cleanTagList(archive[itemCategory].items[itemIndex].tags);
 
@@ -174,6 +175,22 @@ function setup() {
   // noLoop();
 }
 
+function mouseClicked(){
+  for (category in archive) {
+    const radius = archive[category].diameter/2;
+    const x = archive[category].coordinates.x;
+    const y = archive[category].coordinates.y;
+    if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
+      if (archive[category].active) {
+        archive[category].active=false;
+      }
+      else{
+        archive[category].active=true;
+      }
+    }
+  }
+}
+
 function draw() {
   background(0.99*255);
   //draw category circles
@@ -183,10 +200,16 @@ function draw() {
     const y = archive[category].coordinates.y;
 
     if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
-      fill(0.85*255); 
+      fill(0.85*255);
     }
     else{
-      fill(0.9*255)
+      if (archive[category].active) {
+        fill(0.85*255);
+      }
+      else{
+        fill(0.9*255);
+      }
+
     }
 
 
