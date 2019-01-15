@@ -70,6 +70,13 @@ let csvTable;
 
 let maxNumItems = 0;
 
+function cleanTagList(tagList){
+  let tagArray = tagList.split(",");
+  tagArray.forEach(function(str,index){
+      this[index]=str.trim();
+  },tagArray);
+  return tagArray.join();
+}
 function preload() {
   csvTable = loadTable('./assets/testdata.csv', 'csv', 'header');
 }
@@ -85,6 +92,7 @@ function setup() {
     if(archive[itemCategory] == undefined){
       archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[]}
     }
+
     //add the item to appropriate category's items list
     archive[itemCategory].items.push(csvTable.getRow(i).obj);
 
@@ -93,6 +101,8 @@ function setup() {
     archive[itemCategory].items[itemIndex]["coordinates"]={};
     archive[itemCategory].items[itemIndex]["catLineEndPts"]=[];
     archive[itemCategory].items[itemIndex]["tagLineEndPts"]=[];
+
+    archive[itemCategory].items[itemIndex].tags=cleanTagList(archive[itemCategory].items[itemIndex].tags);
 
     //increment category's numItems by 1
     archive[itemCategory].numItems++;
