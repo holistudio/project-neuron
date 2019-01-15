@@ -215,6 +215,14 @@ function mouseClicked(){
           }
           else{
             item.active=true;
+            const form = document.querySelector('.side-form').children;
+
+            for (let i = 0; i < form.length; i++) {
+              const key = form[i].firstElementChild.id.split('-')[1];
+              // console.log(key)
+              form[i].firstElementChild.innerHTML=item[key];
+            }
+
           }
         }
 
