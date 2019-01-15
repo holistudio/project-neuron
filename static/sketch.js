@@ -191,7 +191,7 @@ function draw() {
     textAlign(CENTER);
     rectMode(CENTER);
 
-    text(archive[category].name.toUpperCase(),archive[category].coordinates.x,archive[category].coordinates.y-archive[category].diameter/2,200,72);
+    text(archive[category].name.toUpperCase(),archive[category].coordinates.x,archive[category].coordinates.y-archive[category].diameter/2-12,200,72);
   }
 
   strokeWeight(1);
@@ -210,7 +210,7 @@ function draw() {
   }
 
   noStroke();
-  fill(0);
+  fill(0.7*255);
   for (category in archive) {
     //for each item in the category
     for (let i=0; i<archive[category].items.length; i++) {
