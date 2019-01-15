@@ -135,11 +135,33 @@ function setup() {
     //for each item in the category
     //place it randomly within the category circle
     for (let i=0; i<archive[category].items.length; i++) {
-      const radius = random((archive[category].diameter-itemDia)/2);
-      const theta = random(TWO_PI);
-      archive[category].items[i]["coordinates"]={
-        x:archive[category].coordinates.x + radius*cos(theta),
-        y: archive[category].coordinates.y + radius*sin(theta)};
+      let radius;
+      let theta;
+      let x;
+      let y;
+
+      let overlap = true;
+      while (overlap) {
+        overlap = false;
+        radius = random((archive[category].diameter-itemDia)/2);
+        theta = random(TWO_PI);
+        // calculate coordinates
+        x = archive[category].coordinates.x + radius*cos(theta);
+        y = archive[category].coordinates.y + radius*sin(theta);
+
+        //check if those coordinates are inside any other item circles
+        for (let j=0; j<archive[category].items.length; j++){
+          const itemTest = archive[category].items[j];
+          if(JSON.stringify(itemTest.coordinates)!="{}"){
+            if(sq(x-itemTest.coordinates.x)+sq(y-itemTest.coordinates.y)<sq(itemDia)){
+              overlap=true;
+              break;
+            }
+          }
+        }
+      }
+
+      archive[category].items[i]["coordinates"]={ x: x, y: y};
     }
     if (c<numCols-1) {
       c++;
