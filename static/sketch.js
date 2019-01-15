@@ -117,7 +117,7 @@ function setup() {
     }
   }
 
-  createCanvas(1150*1.25, 768*1.25);
+  let canvas = createCanvas(1150*1.25, 768*1.25);
   //calculate where the category abd item circle centers are
   //2 x 3 grid for the six categories
   var numRows = 2;
@@ -192,10 +192,7 @@ function setup() {
 
   textFont("Gill Sans MT");
 
-
-
-
-  // noLoop();
+  canvas.parent('canvas-container')
 }
 
 function mouseClicked(){
