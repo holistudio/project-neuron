@@ -168,20 +168,31 @@ function setup() {
 
   textFont("Gill Sans MT");
 
-  background(0.99*255);
 
 
-  noLoop();
+
+  // noLoop();
 }
 
 function draw() {
+  background(0.99*255);
   //draw category circles
   for (category in archive) {
-    // fill(0.7*255); hover color
-    fill(0.9*255)
+    const radius = archive[category].diameter/2;
+    const x = archive[category].coordinates.x;
+    const y = archive[category].coordinates.y;
+
+    if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
+      fill(0.85*255); 
+    }
+    else{
+      fill(0.9*255)
+    }
+
+
     noStroke();
     //draw  a circle of categoryDia
-    ellipse(archive[category].coordinates.x,archive[category].coordinates.y,archive[category].diameter,archive[category].diameter);
+    ellipse(x,y,archive[category].diameter,archive[category].diameter);
 
 
 
