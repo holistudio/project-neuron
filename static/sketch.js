@@ -68,6 +68,14 @@ var tagDisplayStart = {x:100, y:50};
 var tagDisplaySpace = 50;
 
 document.addEventListener('DOMContentLoaded', () => {
+  let tagListText = document.querySelector('#tag-list').innerHTML;
+  displayedTags.forEach( e => {
+    if(e.name != undefined){
+      tagListText+=e.name + ', ';
+
+    }
+  });
+  document.querySelector('#tag-list').innerHTML = tagListText;
   document.querySelector('#tag-display-form').onsubmit = () => {
     let nextPosition = tagDisplayStart;
     //find the next available spot in the default display position
@@ -79,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagName = document.querySelector('#tag-display-input').value; //from form
     document.querySelector('#tag-display-input').value = "";
     displayedTags.push({name: tagName, coordinates: {x: nextPosition.x, y: nextPosition.y}});
+    document.querySelector('#tag-list').innerHTML+=tagName  + ', ';
     return false;
   };
 });
@@ -234,7 +243,6 @@ function mouseClicked(){
 
             for (let i = 0; i < form.length; i++) {
               const key = form[i].firstElementChild.id.split('-')[1];
-              // console.log(key)
               form[i].firstElementChild.innerHTML=item[key];
             }
 
