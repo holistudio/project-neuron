@@ -68,7 +68,12 @@ var tagDisplayStart = {x:100, y:50};
 var tagDisplaySpace = 50;
 var tDUnitWidth = 10;
 
-
+var tagDisplayColors = [
+  [8,79,205], //blue
+  [48,180,97], //green
+  [201,48,30], //red
+  [249,228,49] // yellow
+];
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -332,7 +337,7 @@ function draw() {
   }
 
   strokeWeight(1);
-  stroke(0, 0, 0, 0.1*255);
+
   for (category in archive) {
     //for each item in the category
     for (let i=0; i<archive[category].items.length; i++) {
@@ -341,8 +346,17 @@ function draw() {
       //and the category's coordinates
 
       for (let j=0; j<item.catLineEndPts.length; j++) {
+        if(item.active){
+          stroke(0, 0, 0, 0.8*255);
+        }
+        else{
+          stroke(0, 0, 0, 0.1*255);
+        }
         line(item.coordinates.x,item.coordinates.y,item.catLineEndPts[j].x,item.catLineEndPts[j].y);
       }
+
+
+      //if that item also shares a selected tag name, draw a blue line
       push();
       stroke(0, 0, 255);
       for (let j = 0; j < displayedTags.length; j++) {
