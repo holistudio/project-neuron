@@ -66,6 +66,7 @@ var displayedTags = [];
 ]*/
 var tagDisplayStart = {x:100, y:50};
 var tagDisplaySpace = 50;
+var tDUnitWidth = 10;
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('#tag-list').innerHTML = displayedTags.join(', ');
@@ -142,7 +143,7 @@ function setup() {
     }
   }
 
-  let canvas = createCanvas(1150*1.25, 768*1.25);
+  let canvas = createCanvas(windowWidth, windowHeight*0.8);
   //calculate where the category abd item circle centers are
   //2 x 3 grid for the six categories
   var numRows = 2;
@@ -221,12 +222,31 @@ function setup() {
   canvas.parent('canvas-container')
 }
 
+function mouseDragged(){
+  for (var i = 0; i < displayedTags.length; i++) {
+    const e = displayedTags[i];
+    const boxW = e.name.length*tDUnitWidth;
+    const boxH = 24+20;
+
+
+    if (((mouseX <= e.coordinates.x+boxW/2) && (mouseX >= e.coordinates.x-boxW/2)) &&
+    ((mouseY <= e.coordinates.y) && (mouseY >= e.coordinates.y-boxH))){
+      e.coordinates.x = mouseX;
+      e.coordinates.y = mouseY+boxH/2;
+
+    }
+  }
+
+}
 function mouseClicked(){
+  //for each category
   for (category in archive) {
     const radius = archive[category].diameter/2;
     const x = archive[category].coordinates.x;
     const y = archive[category].coordinates.y;
     if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
+      let itemClicked = false;
+      //for each item in the category that the mouse cursor is in
       for (let i=0; i<archive[category].items.length; i++){
         const item = archive[category].items[i];
         const itemRadius = itemDia/2;
@@ -238,6 +258,7 @@ function mouseClicked(){
           }
           else{
             item.active=true;
+            itemClicked = true;
             const form = document.querySelector('.side-form').children;
 
             for (let i = 0; i < form.length; i++) {
@@ -249,14 +270,17 @@ function mouseClicked(){
         }
 
       }
-      if (archive[category].active) {
+      if (archive[category].active && (!itemClicked)) {
         archive[category].active=false;
         const remIndex = selectedCategories.indexOf(archive[category].name);
         selectedCategories.splice(remIndex,1);
       }
       else{
         archive[category].active=true;
-        selectedCategories.push(archive[category].name);
+        if (!selectedCategories.includes(archive[category].name)){
+          selectedCategories.push(archive[category].name);
+        }
+
       }
       document.querySelector('#category-list').innerHTML=selectedCategories.join(', ');
     }
@@ -271,17 +295,11 @@ function draw() {
     const x = archive[category].coordinates.x;
     const y = archive[category].coordinates.y;
 
-    if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
-      fill(229, 255, 255);
+    if (archive[category].active) {
+      fill(204, 255, 255);
     }
     else{
-      if (archive[category].active) {
-        fill(204, 255, 255);
-      }
-      else{
-        fill(0.9*255);
-      }
-
+      fill(0.9*255);
     }
 
 
