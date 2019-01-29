@@ -68,7 +68,12 @@ var tagDisplayStart = {x:100, y:50};
 var tagDisplaySpace = 50;
 var tDUnitWidth = 10;
 
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
+  var overlay = document.getElementById('item-form-overlay');
+
   document.querySelector('#tag-list').innerHTML = displayedTags.join(', ');
   document.querySelector('#tag-display-form').onsubmit = () => {
     let nextPosition = tagDisplayStart;
@@ -90,6 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     return false;
   };
+
+  window.onclick = function(event) {
+      if (event.target == overlay) {
+          overlay.style.display = "none";
+      }
+  }
 });
 
 
@@ -143,7 +154,7 @@ function setup() {
     }
   }
 
-  let canvas = createCanvas(windowWidth, windowHeight*0.8);
+  let canvas = createCanvas(windowWidth, windowHeight*0.9);
   //calculate where the category abd item circle centers are
   //2 x 3 grid for the six categories
   var numRows = 2;
@@ -259,7 +270,9 @@ function mouseClicked(){
           else{
             item.active=true;
             itemClicked = true;
-            const form = document.querySelector('.side-form').children;
+
+            document.querySelector('#item-form-overlay').style.display = "block";
+            const form = document.querySelector('#item-form-content').children;
 
             for (let i = 0; i < form.length; i++) {
               const key = form[i].firstElementChild.id.split('-')[1];
