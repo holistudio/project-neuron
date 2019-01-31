@@ -233,7 +233,7 @@ function setup() {
     }
   }
 
-  textFont("Gill Sans MT");
+  textFont("sans-serif");
 
   canvas.parent('canvas-container')
 }
@@ -242,7 +242,7 @@ function mouseDragged(){
   for (var i = 0; i < displayedTags.length; i++) {
     const e = displayedTags[i];
     const boxW = e.name.length*tDUnitWidth;
-    const boxH = 24+20;
+    const boxH = 24;
 
 
     if (((mouseX <= e.coordinates.x+boxW/2) && (mouseX >= e.coordinates.x-boxW/2)) &&
@@ -358,7 +358,7 @@ function draw() {
 
       //if that item also shares a selected tag name, draw a blue line
       push();
-      stroke(0, 0, 255);
+      stroke(8,79,205);
       for (let j = 0; j < displayedTags.length; j++) {
         if(item.tags.includes(displayedTags[j].name)){
           line(item.coordinates.x,item.coordinates.y,displayedTags[j].coordinates.x,displayedTags[j].coordinates.y);
