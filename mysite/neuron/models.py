@@ -42,4 +42,4 @@ class Item(models.Model):
 
 
 	def __str__(self):
-		str(f"Item: {self.title} - {self.authors}");
+		return str(f"Item: {self.title} - {self.authors}");
