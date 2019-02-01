@@ -265,7 +265,13 @@ function mouseClicked(){
 
             for (let i = 0; i < form.length; i++) {
               const key = form[i].firstElementChild.id.split('-')[1];
-              form[i].firstElementChild.innerHTML=item[key];
+              if (item[key] != undefined) {
+                form[i].firstElementChild.innerHTML=item[key];
+              }
+              else{
+                form[i].firstElementChild.innerHTML="";
+              }
+
             }
 
           }
