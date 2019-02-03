@@ -70,6 +70,28 @@ var tagDisplayColors = [
 
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.editable').forEach( (editable) => {
+    editable.onclick = () => {
+      const text = editable.innerHTML;
+      let input;
+      if(editable.id == 'item-notes'){
+
+        input = document.createElement('textarea')
+        input.rows = '10';
+        input.cols = '40';
+        input.innerHTML = `${text}`;
+      }
+      else{
+        input = document.createElement('input')
+        input.type = 'text';
+        input.value = text;
+      }
+
+      editable.innerHTML = '';
+      editable.append(input)
+    };
+  });
+
   var overlay = document.getElementById('item-form-overlay');
 
   document.querySelector('#tag-list').innerHTML = displayedTags.join(', ');
@@ -264,12 +286,14 @@ function mouseClicked(){
             const form = document.querySelector('#item-form-content').children;
 
             for (let i = 0; i < form.length; i++) {
-              const key = form[i].firstElementChild.id.split('-')[1];
+              const fillTag = form[i].getElementsByClassName('editable')[0]
+              const key = fillTag.id.split('-')[1];
+              console.log(item[key]);
               if (item[key] != undefined) {
-                form[i].firstElementChild.innerHTML=item[key];
+                fillTag.innerHTML=item[key];
               }
               else{
-                form[i].firstElementChild.innerHTML="";
+                fillTag.innerHTML="";
               }
 
             }
