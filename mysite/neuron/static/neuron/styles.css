@@ -3,8 +3,12 @@ html, body {
   padding: 0;
   font-family: "Gill Sans MT", Arial, Helvetica, sans-serif;
 }
-canvas {
+#canvas-container canvas {
   display: block;
+  width: 100% !important;
+  height: auto !important;
+}
+@media screen and (max-width: 610px){
 }
 
 .top-bar{
