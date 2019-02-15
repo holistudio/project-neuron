@@ -295,15 +295,19 @@ function mouseClicked(){
             const form = document.querySelector('#item-form-content').children;
 
             for (let i = 0; i < form.length; i++) {
+              //for each child of div item-form-content, get the first element with class "editable"
               const fillTag = form[i].getElementsByClassName('editable')[0]
-              const key = fillTag.id.split('-')[1];
-              if (item[key] != undefined) {
-                fillTag.innerHTML=item[key];
-              }
-              else{
-                fillTag.innerHTML="";
-              }
+              if (fillTag != undefined){
+                //get that element's id (author, notes, etc)
+                const key = fillTag.id.split('-')[1];
 
+                if (item[key] != undefined) {
+                  fillTag.innerHTML=item[key];
+                }
+                else{
+                  fillTag.innerHTML="";
+                }
+              }
             }
 
           }
