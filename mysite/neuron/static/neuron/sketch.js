@@ -72,23 +72,30 @@ var tagDisplayColors = [
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.editable').forEach( (editable) => {
     editable.onclick = () => {
-      const text = editable.innerHTML;
-      let input;
-      if(editable.id == 'item-notes'){
+      if(!(editable.classList.contains('inEditMode'))){
+        //only if the classlist doesn't have inEditMode
+        const text = editable.innerHTML;
+        let input;
+        if(editable.id == 'item-notes'){
 
-        input = document.createElement('textarea')
-        input.rows = '10';
-        input.cols = '40';
-        input.innerHTML = `${text}`;
-      }
-      else{
-        input = document.createElement('input')
-        input.type = 'text';
-        input.value = text;
+          input = document.createElement('textarea')
+          input.rows = '10';
+          input.cols = '40';
+          input.innerHTML = `${text}`;
+        }
+        else{
+          input = document.createElement('input')
+          input.type = 'text';
+          input.value = text;
+        }
+
+        editable.innerHTML = '';
+        editable.append(input)
+        //add inEditMode to class list
+        editable.classList.add("inEditMode");
+        input.focus();
       }
 
-      editable.innerHTML = '';
-      editable.append(input)
     };
   });
 
@@ -117,6 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.onclick = function(event) {
+    //if event target doesn't have 'inEditMode' class,
+    // then for each inEditMode
       if (event.target == overlay) {
           overlay.style.display = "none";
       }
@@ -288,7 +297,6 @@ function mouseClicked(){
             for (let i = 0; i < form.length; i++) {
               const fillTag = form[i].getElementsByClassName('editable')[0]
               const key = fillTag.id.split('-')[1];
-              console.log(item[key]);
               if (item[key] != undefined) {
                 fillTag.innerHTML=item[key];
               }
