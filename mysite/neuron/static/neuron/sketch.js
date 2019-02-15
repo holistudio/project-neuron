@@ -126,9 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
   window.onclick = function(event) {
     //if event target doesn't have 'inEditMode' class,
     // then for each inEditMode
-      if (event.target == overlay) {
-          overlay.style.display = "none";
-      }
+    if (event.target == overlay) {
+        overlay.style.display = "none";
+    }
+    if (!(event.target.classList.contains('inEditMode'))){
+      console.log('save the text!')
+      document.querySelectorAll('.inEditMode').forEach( (editable) => {
+        const text = editable.firstChild.value;
+        editable.innerHTML = text;
+        editable.classList.remove('inEditMode');
+      });
+    }
   }
 });
 
