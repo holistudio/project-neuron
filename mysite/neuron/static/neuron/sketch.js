@@ -70,34 +70,34 @@ var tagDisplayColors = [
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.editable').forEach( (editable) => {
-    editable.onclick = () => {
-      if(!(editable.classList.contains('inEditMode'))){
-        //only if the classlist doesn't have inEditMode
-        const text = editable.innerHTML;
-        let input;
-        if(editable.id == 'item-notes'){
-
-          input = document.createElement('textarea')
-          input.rows = '10';
-          input.cols = '40';
-          input.innerHTML = `${text}`;
-        }
-        else{
-          input = document.createElement('input')
-          input.type = 'text';
-          input.value = text;
-        }
-
-        editable.innerHTML = '';
-        editable.append(input)
-        //add inEditMode to class list
-        editable.classList.add("inEditMode");
-        input.focus();
-      }
-
-    };
-  });
+  // document.querySelectorAll('.editable').forEach( (editable) => {
+  //   editable.onclick = () => {
+  //     if(!(editable.classList.contains('inEditMode'))){
+  //       //only if the classlist doesn't have inEditMode
+  //       const text = editable.innerHTML;
+  //       let input;
+  //       if(editable.id == 'item-notes'){
+  //
+  //         input = document.createElement('textarea')
+  //         input.rows = '10';
+  //         input.cols = '40';
+  //         input.innerHTML = `${text}`;
+  //       }
+  //       else{
+  //         input = document.createElement('input')
+  //         input.type = 'text';
+  //         input.value = text;
+  //       }
+  //
+  //       editable.innerHTML = '';
+  //       editable.append(input)
+  //       //add inEditMode to class list
+  //       editable.classList.add("inEditMode");
+  //       input.focus();
+  //     }
+  //
+  //   };
+  // });
 
   var overlay = document.getElementById('item-form-overlay');
 
@@ -130,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.style.display = "none";
     }
     if (!(event.target.classList.contains('inEditMode'))){
-      console.log('save the text!')
       document.querySelectorAll('.inEditMode').forEach( (editable) => {
         const text = editable.firstChild.value;
         editable.innerHTML = text;
@@ -300,20 +299,22 @@ function mouseClicked(){
             itemClicked = true;
 
             document.querySelector('#item-form-overlay').style.display = "block";
-            const form = document.querySelector('#item-form-content').children;
+            const form = document.querySelector('#item-form').children;
 
             for (let i = 0; i < form.length; i++) {
               //for each child of div item-form-content, get the first element with class "editable"
               const fillTag = form[i].getElementsByClassName('editable')[0]
               if (fillTag != undefined){
                 //get that element's id (author, notes, etc)
-                const key = fillTag.id.split('-')[1];
-
+                const key = fillTag.name.split('_')[1];
                 if (item[key] != undefined) {
-                  fillTag.innerHTML=item[key];
-                }
-                else{
-                  fillTag.innerHTML="";
+                  if(key=='notes' || key =='description'){
+
+                    fillTag.innerHTML=`${item[key]}`;
+                  }
+                  else{
+                    fillTag.value=`${item[key]}`;
+                  }
                 }
               }
             }
