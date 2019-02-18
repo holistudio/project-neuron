@@ -52,6 +52,8 @@ def item_update(request):
 		#get the item with id from form
 		item, created = Item.objects.get_or_create(id = request.POST["item_id"]);
 		item_dict = model_to_dict(item);
+		#for each model field of Item, update with the corresponding
+		#POST request object 
 		for field in Item._meta.get_fields():
 			#if the field is category set to category object instead
 			if field.name == 'category':
