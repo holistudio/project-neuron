@@ -74,7 +74,7 @@ const buttonWidth = 120;
 const buttonHeight = 40;
 const buttonPadding = 10;
 const buttonMenuCoord = {x:20,y:-20}; //bottom left corner of the menu
-const buttons = [
+let buttons = [
   {
     name: 'addItem',
     text: 'Add Item'},
@@ -277,6 +277,13 @@ function setup() {
     }
   }
 
+  //calculate locations of buttons' upper right corner
+  for (let i = 0; i < buttons.length; i++) {
+    const buttonX = buttonMenuCoord.x;
+    const buttonY = height+buttonMenuCoord.y-buttonHeight*(i+1)-buttonPadding*i;
+    buttons[buttons.length-i-1]['coord'] = {x: buttonX, y:buttonY};
+  }
+
   textFont("sans-serif");
 
   canvas.parent('canvas-container')
@@ -299,6 +306,49 @@ function mouseDragged(){
 
 }
 function mouseClicked(){
+  // console.log(`${mouseX},${mouseY}`);
+  //handle button clicks
+  for (let i = 0; i < buttons.length; i++) {
+    if(mouseX>buttons[i].coord.x &&
+      mouseX<buttons[i].coord.x+buttonWidth &&
+      mouseY>buttons[i].coord.y &&
+      mouseY<buttons[i].coord.y+buttonHeight){
+        if(buttons[i].name=='addItem'){
+          document.querySelector('#item-form-overlay').style.display = "block";
+          const form = document.querySelector('#item-form').children;
+
+          for (let i = 0; i < form.length; i++) {
+            //for each child of div item-form-content, get the first element
+            // with class "editable"
+            const formElement = form[i].firstElementChild;
+            if (formElement != undefined){
+              if(formElement.classList.contains('editable')){
+                //clear input boxes
+                const key = formElement.name.split('_')[1];
+                if(key=='notes' || key =='description'){
+                  formElement.innerHTML='';
+                }
+                else if (key=='id') {
+                  formElement.value=maxItemID+1;
+                }
+                else{
+                  formElement.value='';
+                }
+              }
+              else{
+
+                //Change button's text to 'Add Button'
+                if (formElement.name=='submit-button'){
+                  formElement.innerHTML= 'Add Item';
+                }
+              }
+
+            }
+          }
+          //assign new id to this new add item form
+        }
+      }
+  }
   //for each category
   for (category in archive) {
     const radius = archive[category].diameter/2;
@@ -325,17 +375,17 @@ function mouseClicked(){
 
             for (let i = 0; i < form.length; i++) {
               //for each child of div item-form-content, get the first element with class "editable"
-              const fillTag = form[i].getElementsByClassName('editable')[0]
-              if (fillTag != undefined){
+              const formElement = form[i].getElementsByClassName('editable')[0]
+              if (formElement != undefined){
                 //get that element's id (author, notes, etc)
-                const key = fillTag.name.split('_')[1];
+                const key = formElement.name.split('_')[1];
                 if (item[key] != undefined) {
                   if(key=='notes' || key =='description'){
 
-                    fillTag.innerHTML=`${item[key]}`;
+                    formElement.innerHTML=`${item[key]}`;
                   }
                   else{
-                    fillTag.value=`${item[key]}`;
+                    formElement.value=`${item[key]}`;
                   }
                 }
               }
@@ -477,9 +527,9 @@ function draw() {
   //buttons
   textAlign(CENTER);
   rectMode(CENTER);
-  for (var i = 0; i < buttons.length; i++) {
+  for (let i = 0; i < buttons.length; i++) {
     const buttonX = buttonMenuCoord.x+buttonWidth/2;
-    const buttonY = height+buttonMenuCoord.y-buttonHeight*(i+1)-buttonPadding*i;
+    const buttonY = height+buttonMenuCoord.y-buttonHeight*(i+0.5)-buttonPadding*i;
     fill(8,79,205);
     rect(buttonX, buttonY, buttonWidth, buttonHeight);
     push();
