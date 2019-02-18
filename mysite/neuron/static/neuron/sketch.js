@@ -69,6 +69,23 @@ var tagDisplayColors = [
 ];
 
 
+//canvas buttons
+const buttonWidth = 120;
+const buttonHeight = 40;
+const buttonPadding = 10;
+const buttonMenuCoord = {x:20,y:-20}; //bottom left corner of the menu
+const buttons = [
+  {
+    name: 'addItem',
+    text: 'Add Item'},
+  {
+    name: 'addCategory',
+    text: 'Add Category'
+  }];
+//Add Item button
+
+//Add Category Button
+
 document.addEventListener('DOMContentLoaded', () => {
   // old code for changing form text into input boxes
   // document.querySelectorAll('.editable').forEach( (editable) => {
@@ -178,7 +195,6 @@ function setup() {
       maxItemID = int(itemTable[i].id);
     }
   }
-  console.log(maxItemID);
 
   //find the maximum number of items in a category
   for (category in archive) {
@@ -458,6 +474,22 @@ function draw() {
 
   //if that item has a tag sharing tagName, draw a line between that item
 
+  //buttons
+  textAlign(CENTER);
+  rectMode(CENTER);
+  for (var i = 0; i < buttons.length; i++) {
+    const buttonX = buttonMenuCoord.x+buttonWidth/2;
+    const buttonY = height+buttonMenuCoord.y-buttonHeight*(i+1)-buttonPadding*i;
+    fill(8,79,205);
+    rect(buttonX, buttonY, buttonWidth, buttonHeight);
+    push();
+    fill(255);
+    // textAlign(CENTER);
+    // rectMode(CENTER);
+    textSize(16);
+    text(buttons[buttons.length-i-1].text,buttonX,buttonY+6);
+    pop();
+  }
 
 
 
