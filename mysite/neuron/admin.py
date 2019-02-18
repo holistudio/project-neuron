@@ -2,9 +2,14 @@ from django.contrib import admin
 
 from .models import Item, Category, Tag
 
+# class TagInline(admin.StackedInline):
+# 	model = Tag;
+# 	extra = 1;
+# 	fields = ['name'];
+
 class ItemAdmin(admin.ModelAdmin):
 	list_display = ('title', 'authors', 'type', 'category');
-	fields = ['title', 'authors', 'type', 'url'];
+	fields = ['title', 'authors', 'type', 'url','tags'];
 
 class ItemInline(admin.StackedInline):
 	model = Item;
