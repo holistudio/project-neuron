@@ -32,21 +32,21 @@
       <div id="item-form-content" class="rightFormContent">
         <form id="item-form" action="{% url 'neuron:item_update' %}" method="post">
       		{% csrf_token %}
-          <h4>Title: <input type="text" name="item_title" class="editable"></span></h4>
+          <h4>Title: <input type="text" name="item_title" class="editable" autocomplete="off"></span></h4>
           <p><input type="text" class="editable" name="item_id" value="0" hidden readonly></p>
 
           <div class="form-section">Authors:
             <input type="text" name="item_authors" class="editable"></div>
           <div class="form-section">Date:
-            <input type="text" name="item_date" class="editable"></div>
+            <input type="text" name="item_date" class="editable" autocomplete="off"></div>
           <div class="form-section">Type:
             <input type="text" name="item_type" class="editable"></div>
           <div class="form-section">URL:
-            <input type="text" name="item_url" class="editable"></div>
+            <input type="text" name="item_url" class="editable" autocomplete="off"></div>
           <div class="form-section">Category:
             <input type="text" name="item_category" class="editable"></div>
           <div class="form-section">Tags:
-            <input type="text" name="item_tags" class="editable"></div>
+            <input type="text" name="item_tags" class="editable" autocomplete="off"></div>
           <div class="form-section">Description:
             <textarea name="item_description" rows="3" cols="50" class="editable">></textarea></div>
           <div class="form-section">Notes:
