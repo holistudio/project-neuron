@@ -375,17 +375,24 @@ function mouseClicked(){
 
             for (let i = 0; i < form.length; i++) {
               //for each child of div item-form-content, get the first element with class "editable"
-              const formElement = form[i].getElementsByClassName('editable')[0]
+              const formElement = form[i].firstElementChild;
               if (formElement != undefined){
-                //get that element's id (author, notes, etc)
-                const key = formElement.name.split('_')[1];
-                if (item[key] != undefined) {
-                  if(key=='notes' || key =='description'){
-
-                    formElement.innerHTML=`${item[key]}`;
+                if(formElement.classList.contains('editable')){
+                  //get that element's id (author, notes, etc)
+                  const key = formElement.name.split('_')[1];
+                  if (item[key] != undefined) {
+                    if(key=='notes' || key =='description'){
+                      formElement.innerHTML=`${item[key]}`;
+                    }
+                    else{
+                      formElement.value=`${item[key]}`;
+                    }
                   }
-                  else{
-                    formElement.value=`${item[key]}`;
+                }
+                else{
+                  //Change button's text to 'Add Button'
+                  if (formElement.name=='submit-button'){
+                    formElement.innerHTML= 'Update Item';
                   }
                 }
               }
