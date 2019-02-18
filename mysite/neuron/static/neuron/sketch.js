@@ -82,9 +82,8 @@ let buttons = [
     name: 'addCategory',
     text: 'Add Category'
   }];
-//Add Item button
 
-//Add Category Button
+let mouseEnabled = true;
 
 document.addEventListener('DOMContentLoaded', () => {
   // old code for changing form text into input boxes
@@ -142,18 +141,33 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.onclick = function(event) {
-    //if event target doesn't have 'inEditMode' class,
-    // then for each inEditMode
-    if (event.target == overlay) {
+    //if the sideform is on display
+    if(overlay.style.display != "" && overlay.style.display != "none"){
+      //check the mouse click's target
+      if (event.target == overlay) {
+        // if the click is outside the form, hide the form and enable the mouse click
         overlay.style.display = "none";
+        mouseEnabled = true;
+      }
+      else{
+        // else if the click is inside the form, disable the mouse click on
+        // on the canvas
+        mouseEnabled = false;
+      }
     }
-    if (!(event.target.classList.contains('inEditMode'))){
-      document.querySelectorAll('.inEditMode').forEach( (editable) => {
-        const text = editable.firstChild.value;
-        editable.innerHTML = text;
-        editable.classList.remove('inEditMode');
-      });
+    else{
+      // if the sideform is not on display, make sure the mouseclick is enabled
+      mouseEnabled = true;
     }
+    // if event target doesn't have 'inEditMode' class,
+    // then for each inEditMode
+    // if (!(event.target.classList.contains('inEditMode'))){
+    //   document.querySelectorAll('.inEditMode').forEach( (editable) => {
+    //     const text = editable.firstChild.value;
+    //     editable.innerHTML = text;
+    //     editable.classList.remove('inEditMode');
+    //   });
+    // }
   }
 });
 
@@ -307,114 +321,115 @@ function mouseDragged(){
 }
 function mouseClicked(){
   // console.log(`${mouseX},${mouseY}`);
-  //handle button clicks
-  for (let i = 0; i < buttons.length; i++) {
-    if(mouseX>buttons[i].coord.x &&
-      mouseX<buttons[i].coord.x+buttonWidth &&
-      mouseY>buttons[i].coord.y &&
-      mouseY<buttons[i].coord.y+buttonHeight){
-        if(buttons[i].name=='addItem'){
-          document.querySelector('#item-form-overlay').style.display = "block";
-          const form = document.querySelector('#item-form').children;
-
-          for (let i = 0; i < form.length; i++) {
-            //for each child of div item-form-content, get the first element
-            // with class "editable"
-            const formElement = form[i].firstElementChild;
-            if (formElement != undefined){
-              if(formElement.classList.contains('editable')){
-                //clear input boxes
-                const key = formElement.name.split('_')[1];
-                if(key=='notes' || key =='description'){
-                  formElement.innerHTML='';
-                }
-                else if (key=='id') {
-                  formElement.value=maxItemID+1;
-                }
-                else{
-                  formElement.value='';
-                }
-              }
-              else{
-
-                //Change button's text to 'Add Button'
-                if (formElement.name=='submit-button'){
-                  formElement.innerHTML= 'Add Item';
-                }
-              }
-
-            }
-          }
-          //assign new id to this new add item form
-        }
-      }
-  }
-  //for each category
-  for (category in archive) {
-    const radius = archive[category].diameter/2;
-    const x = archive[category].coordinates.x;
-    const y = archive[category].coordinates.y;
-    if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
-      let itemClicked = false;
-      //for each item in the category that the mouse cursor is in
-      for (let i=0; i<archive[category].items.length; i++){
-        const item = archive[category].items[i];
-        const itemRadius = itemDia/2;
-        const itemX = item.coordinates.x;
-        const itemY = item.coordinates.y;
-        if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius)){
-          if (item.active) {
-            item.active=false;
-          }
-          else{
-            item.active=true;
-            itemClicked = true;
-
+  if (mouseEnabled){
+    //handle button clicks
+    for (let i = 0; i < buttons.length; i++) {
+      if(mouseX>buttons[i].coord.x &&
+        mouseX<buttons[i].coord.x+buttonWidth &&
+        mouseY>buttons[i].coord.y &&
+        mouseY<buttons[i].coord.y+buttonHeight){
+          if(buttons[i].name=='addItem'){
             document.querySelector('#item-form-overlay').style.display = "block";
             const form = document.querySelector('#item-form').children;
 
             for (let i = 0; i < form.length; i++) {
-              //for each child of div item-form-content, get the first element with class "editable"
+              //for each child of div item-form-content, get the first element
+              // with class "editable"
               const formElement = form[i].firstElementChild;
               if (formElement != undefined){
                 if(formElement.classList.contains('editable')){
-                  //get that element's id (author, notes, etc)
+                  //clear input boxes
                   const key = formElement.name.split('_')[1];
-                  if (item[key] != undefined) {
-                    if(key=='notes' || key =='description'){
-                      formElement.innerHTML=`${item[key]}`;
-                    }
-                    else{
-                      formElement.value=`${item[key]}`;
-                    }
+                  if(key=='notes' || key =='description'){
+                    formElement.innerHTML='';
+                  }
+                  else if (key=='id') {
+                    formElement.value=maxItemID+1;
+                  }
+                  else{
+                    formElement.value='';
                   }
                 }
                 else{
                   //Change button's text to 'Add Button'
                   if (formElement.name=='submit-button'){
-                    formElement.innerHTML= 'Update Item';
+                    formElement.innerHTML= 'Add Item';
+                  }
+                }
+
+              }
+            }
+            //assign new id to this new add item form
+          }
+        }
+    }
+    //for each category
+    for (category in archive) {
+      const radius = archive[category].diameter/2;
+      const x = archive[category].coordinates.x;
+      const y = archive[category].coordinates.y;
+      if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
+        let itemClicked = false;
+        //for each item in the category that the mouse cursor is in
+        for (let i=0; i<archive[category].items.length; i++){
+          const item = archive[category].items[i];
+          const itemRadius = itemDia/2;
+          const itemX = item.coordinates.x;
+          const itemY = item.coordinates.y;
+          if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius)){
+            if (item.active) {
+              item.active=false;
+            }
+            else{
+              item.active=true;
+              itemClicked = true;
+
+              document.querySelector('#item-form-overlay').style.display = "block";
+              const form = document.querySelector('#item-form').children;
+
+              for (let i = 0; i < form.length; i++) {
+                //for each child of div item-form-content, get the first element with class "editable"
+                const formElement = form[i].firstElementChild;
+                if (formElement != undefined){
+                  if(formElement.classList.contains('editable')){
+                    //get that element's id (author, notes, etc)
+                    const key = formElement.name.split('_')[1];
+                    if (item[key] != undefined) {
+                      if(key=='notes' || key =='description'){
+                        formElement.innerHTML=`${item[key]}`;
+                      }
+                      else{
+                        formElement.value=`${item[key]}`;
+                      }
+                    }
+                  }
+                  else{
+                    //Change button's text to 'Add Button'
+                    if (formElement.name=='submit-button'){
+                      formElement.innerHTML= 'Update Item';
+                    }
                   }
                 }
               }
+
             }
-
           }
-        }
 
-      }
-      if (archive[category].active && (!itemClicked)) {
-        archive[category].active=false;
-        const remIndex = selectedCategories.indexOf(archive[category].name);
-        selectedCategories.splice(remIndex,1);
-      }
-      else{
-        archive[category].active=true;
-        if (!selectedCategories.includes(archive[category].name)){
-          selectedCategories.push(archive[category].name);
         }
+        if (archive[category].active && (!itemClicked)) {
+          archive[category].active=false;
+          const remIndex = selectedCategories.indexOf(archive[category].name);
+          selectedCategories.splice(remIndex,1);
+        }
+        else{
+          archive[category].active=true;
+          if (!selectedCategories.includes(archive[category].name)){
+            selectedCategories.push(archive[category].name);
+          }
 
+        }
+        document.querySelector('#category-list').innerHTML=selectedCategories.join(', ');
       }
-      document.querySelector('#category-list').innerHTML=selectedCategories.join(', ');
     }
   }
 }
