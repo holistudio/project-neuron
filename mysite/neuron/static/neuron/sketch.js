@@ -50,7 +50,7 @@ var archive={}; //JSON so that the keys can be strings
     ...
 ]
 */
-
+let maxItemID = 0;
 var selectedCategories=[];
 var displayedTags = [];
 /*[
@@ -70,6 +70,7 @@ var tagDisplayColors = [
 
 
 document.addEventListener('DOMContentLoaded', () => {
+  // old code for changing form text into input boxes
   // document.querySelectorAll('.editable').forEach( (editable) => {
   //   editable.onclick = () => {
   //     if(!(editable.classList.contains('inEditMode'))){
@@ -172,7 +173,12 @@ function setup() {
 
     //increment category's numItems by 1
     archive[itemCategory].numItems++;
+
+    if(int(itemTable[i].id)>maxItemID){
+      maxItemID = int(itemTable[i].id);
+    }
   }
+  console.log(maxItemID);
 
   //find the maximum number of items in a category
   for (category in archive) {
