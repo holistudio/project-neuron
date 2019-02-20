@@ -141,11 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   };
 
-  document.querySelector('#cancel-button').onclick = () =>{
-    overlay.style.display = "none";
-    mouseEnabled = true;
-    return false;
-  };
+  document.querySelectorAll('.cancel-button').forEach( (b) => {
+    b.onclick = () => {
+      overlay.style.display = "none";
+      mouseEnabled = true;
+      return false;
+    }
+  });
 
   window.onclick = function(event) {
     //if the sideform is on display
@@ -394,7 +396,7 @@ function mouseClicked(){
             //assign new id to this new add item form
           }
           else if (buttons[i].name=='addCategory') {
-            document.querySelector('#category-form-overlay').style.display = "block";
+            document.querySelector('#side-form-overlay').style.display = "block";
             document.querySelector('#item-form').style.display = "none";
             document.querySelector('#category-form').style.display = "block";
             const form = document.querySelector('#category-form').children;
