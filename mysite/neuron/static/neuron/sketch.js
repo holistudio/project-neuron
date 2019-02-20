@@ -140,6 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   };
 
+  document.querySelector('#cancel-button').onclick = () =>{
+    overlay.style.display = "none";
+    mouseEnabled = true;
+    return false;
+  };
+
   window.onclick = function(event) {
     //if the sideform is on display
     if(overlay.style.display != "" && overlay.style.display != "none"){
