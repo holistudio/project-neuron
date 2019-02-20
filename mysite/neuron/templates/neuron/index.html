@@ -61,7 +61,21 @@
 
       </div>
     </div>
+    <div id="category-form-overlay" class="rightFormOverlay">
+      <div id="category-form-content" class="rightFormContent">
+        <form id="category-form" action="{% url 'neuron:item_update' %}" method="post">
+      		{% csrf_token %}
+          <h4>Category: <input type="text" name="category_name" class="editable" autocomplete="off"></span></h4>
+          <p><input type="text" class="editable" name="category_id" value="0" hidden readonly></p>
+          <div class="form-section">
+            <button type="submit" form="category-form" name="submit_button"></button>
+            <button id="cancel-button" form="category-form" name="cancel_button">Cancel</button>
+            <button type="submit" form="category-form" name="delete_button">Delete</button>
+          </div>
+        </form>
 
+      </div>
+    </div>
     <script src="{% static 'neuron/sketch.js' %}"></script>
   </body>
 </html>
