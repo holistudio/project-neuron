@@ -367,6 +367,38 @@ function mouseClicked(){
             }
             //assign new id to this new add item form
           }
+          else if (buttons[i].name=='addCategory') {
+            document.querySelector('#category-form-overlay').style.display = "block";
+            const form = document.querySelector('#category-form').children;
+
+            for (let i = 0; i < form.length; i++) {
+              //for each child of div item-form-content, get the first element
+              // with class "editable"
+              const formElement = form[i].firstElementChild;
+              if (formElement != undefined){
+                if(formElement.classList.contains('editable')){
+                  //clear input boxes
+                  const key = formElement.name.split('_')[1];
+                  if(key=='notes' || key =='description'){
+                    formElement.innerHTML='';
+                  }
+                  else if (key=='id') {
+                    formElement.value=maxCategoryID+1;
+                  }
+                  else{
+                    formElement.value='';
+                  }
+                }
+                else{
+                  //Change button's text to 'Add Button'
+                  if (formElement.name=='submit-button'){
+                    formElement.innerHTML= 'Add Category';
+                  }
+                }
+
+              }
+            }
+          }
         }
     }
     //for each category
