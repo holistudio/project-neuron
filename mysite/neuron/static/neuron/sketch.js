@@ -51,6 +51,7 @@ var archive={}; //JSON so that the keys can be strings
 ]
 */
 let maxItemID = 0;
+let maxCategoryID = 0;
 var selectedCategories=[];
 var displayedTags = [];
 /*[
@@ -189,13 +190,31 @@ function preload(){
 
 function setup() {
   var itemTable = window.itemTable;
+  var categoryTable = window.categoryTable;
+
   //for each row in the table,
   for (let i=0; i<itemTable.length; i++) {
     //get the row's category
     const itemCategory = itemTable[i].category;
+
     //if that category isn't in archive, add it to archive
     if(archive[itemCategory] == undefined){
-      archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[], "active":false}
+      //find the category's database ID
+      let categoryFound = false;
+      let j = 0;
+      let categoryID;
+      while (!categoryFound) {
+        if(categoryTable[j].name == itemCategory){
+          categoryFound = true;
+          categoryID = categoryTable[j].id;
+        }
+        else{
+          j++;
+        }
+      }
+
+      
+      archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[], "active":false, "id": categoryID}
     }
 
     //add the item to appropriate category's items list
@@ -211,8 +230,13 @@ function setup() {
     //increment category's numItems by 1
     archive[itemCategory].numItems++;
 
+    //find the max Item ID for adding new items
     if(int(itemTable[i].id)>maxItemID){
       maxItemID = int(itemTable[i].id);
+    }
+    //find the max Category ID for adding new categories
+    if(archive[itemCategory].id > maxCategoryID){
+      maxCategoryID = archive[itemCategory].id;
     }
   }
 
