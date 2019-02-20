@@ -34,9 +34,8 @@ def index(request):
 def item_update(request):
 	if request.method == 'POST':
 		#if delete item is in the keys of the request
-		if 'delete_item' in request.POST.keys():
+		if 'delete_button' in request.POST.keys():
 			#delete the item instead of updating
-			print(request.POST['delete_item']));
 			item = Item.objects.get(id = request.POST["item_id"]);
 			item.delete();
 			item.category.save();
