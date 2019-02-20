@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //   };
   // });
 
-  var overlay = document.getElementById('item-form-overlay');
+  var overlay = document.getElementById('side-form-overlay');
 
   document.querySelector('#tag-list').innerHTML = displayedTags.join(', ');
   document.querySelector('#tag-display-form').onsubmit = () => {
@@ -359,11 +359,13 @@ function mouseClicked(){
         mouseY>buttons[i].coord.y &&
         mouseY<buttons[i].coord.y+buttonHeight){
           if(buttons[i].name=='addItem'){
-            document.querySelector('#item-form-overlay').style.display = "block";
+            document.querySelector('#side-form-overlay').style.display = "block";
+            document.querySelector('#item-form').style.display = "block";
+            document.querySelector('#category-form').style.display = "none";
             const form = document.querySelector('#item-form').children;
 
             for (let i = 0; i < form.length; i++) {
-              //for each child of div item-form-content, get the first element
+              //for each child of div side-form-content, get the first element
               // with class "editable"
               const formElement = form[i].firstElementChild;
               if (formElement != undefined){
@@ -393,10 +395,12 @@ function mouseClicked(){
           }
           else if (buttons[i].name=='addCategory') {
             document.querySelector('#category-form-overlay').style.display = "block";
+            document.querySelector('#item-form').style.display = "none";
+            document.querySelector('#category-form').style.display = "block";
             const form = document.querySelector('#category-form').children;
 
             for (let i = 0; i < form.length; i++) {
-              //for each child of div item-form-content, get the first element
+              //for each child of div side-form-content, get the first element
               // with class "editable"
               const formElement = form[i].firstElementChild;
               if (formElement != undefined){
@@ -446,11 +450,13 @@ function mouseClicked(){
               item.active=true;
               itemClicked = true;
 
-              document.querySelector('#item-form-overlay').style.display = "block";
+              document.querySelector('#side-form-overlay').style.display = "block";
+              document.querySelector('#item-form').style.display = "block";
+              document.querySelector('#category-form').style.display = "none";
               const form = document.querySelector('#item-form').children;
 
               for (let i = 0; i < form.length; i++) {
-                //for each child of div item-form-content, get the first element with class "editable"
+                //for each child of div side-form-content, get the first element with class "editable"
                 const formElement = form[i].firstElementChild;
                 if (formElement != undefined){
                   if(formElement.classList.contains('editable')){

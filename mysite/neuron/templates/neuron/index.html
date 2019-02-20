@@ -29,8 +29,8 @@
     <div id="canvas-container">
 
     </div>
-    <div id="item-form-overlay" class="rightFormOverlay">
-      <div id="item-form-content" class="rightFormContent">
+    <div id="side-form-overlay" class="rightFormOverlay">
+      <div id="side-form-content" class="rightFormContent">
         <form id="item-form" action="{% url 'neuron:item_update' %}" method="post">
       		{% csrf_token %}
           <h4>Title: <input type="text" name="item_title" class="editable" autocomplete="off"></span></h4>
@@ -59,11 +59,6 @@
             <button type="submit" form="item-form" name="delete_button">Delete</button>
           </div>
         </form>
-
-      </div>
-    </div>
-    <div id="category-form-overlay" class="rightFormOverlay">
-      <div id="category-form-content" class="rightFormContent">
         <form id="category-form" action="{% url 'neuron:item_update' %}" method="post">
       		{% csrf_token %}
           <h4>Category: <input type="text" name="category_name" class="editable" autocomplete="off"></span></h4>
@@ -74,7 +69,6 @@
             <button type="submit" form="category-form" name="delete_button">Delete</button>
           </div>
         </form>
-
       </div>
     </div>
     <script src="{% static 'neuron/sketch.js' %}"></script>
