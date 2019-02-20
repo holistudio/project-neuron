@@ -298,7 +298,7 @@ function setup() {
     buttons[buttons.length-i-1]['coord'] = {x: buttonX, y:buttonY};
   }
 
-  textFont("sans-serif");
+  textFont("Gill Sans");
 
   canvas.parent('canvas-container')
 }
