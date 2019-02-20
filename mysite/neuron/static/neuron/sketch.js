@@ -213,7 +213,7 @@ function setup() {
         }
       }
 
-      
+
       archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[], "active":false, "id": categoryID}
     }
 
@@ -382,7 +382,7 @@ function mouseClicked(){
                 }
                 else{
                   //Change button's text to 'Add Button'
-                  if (formElement.name=='submit-button'){
+                  if (formElement.name=='submit_button'){
                     formElement.innerHTML= 'Add Item';
                   }
                 }
@@ -415,7 +415,7 @@ function mouseClicked(){
                 }
                 else{
                   //Change button's text to 'Add Button'
-                  if (formElement.name=='submit-button'){
+                  if (formElement.name=='submit_button'){
                     formElement.innerHTML= 'Add Category';
                   }
                 }
@@ -467,7 +467,7 @@ function mouseClicked(){
                   }
                   else{
                     //Change button's text to 'Add Button'
-                    if (formElement.name=='submit-button'){
+                    if (formElement.name=='submit_button'){
                       formElement.innerHTML= 'Update Item';
                     }
                   }
