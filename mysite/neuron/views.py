@@ -31,6 +31,19 @@ def index(request):
 	}
 	return HttpResponse(template.render(context, request))
 
+def category_update(request):
+	if request.method == 'POST':
+		#if delete item is in the keys of the request
+		if 'delete_button' in request.POST.keys():
+			#delete the item instead of updating
+			cat = cat.objects.get(id = request.POST["category_id"]);
+			cat.delete();
+		else:
+			#find item's corresponding category or create one if new category
+			category, created = Category.objects.get_or_create(
+			name=request.POST['category_name']);
+	#redirect to index
+	return HttpResponseRedirect(reverse("neuron:index"));
 def item_update(request):
 	if request.method == 'POST':
 		#if delete item is in the keys of the request
