@@ -59,7 +59,7 @@
             <button type="submit" form="item-form" name="delete_button">Delete</button>
           </div>
         </form>
-        <form id="category-form" action="{% url 'neuron:item_update' %}" method="post">
+        <form id="category-form" action="{% url 'neuron:category_update' %}" method="post">
       		{% csrf_token %}
           <h4>Category: <input type="text" name="category_name" class="editable" autocomplete="off"></span></h4>
           <p><input type="text" class="editable" name="category_id" value="0" hidden readonly></p>
