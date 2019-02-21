@@ -1,5 +1,7 @@
 //categories and their coordinates
 var categoryDia = 200;
+let maxNumItems = 0; //max number of items in a category, which will scale the
+                     //diameters of the category circles drawn.
 var itemDia = 10;
 var archive={}; //JSON so that the keys can be strings
 /* {
@@ -69,7 +71,6 @@ var tagDisplayColors = [
   [249,228,49] // yellow
 ];
 
-
 //canvas buttons
 const buttonWidth = 120;
 const buttonHeight = 40;
@@ -84,39 +85,9 @@ let buttons = [
     text: 'Add Category'
   }];
 
-let mouseEnabled = true;
+let mouseEnabled = true; //mouse enable/disable variable for disabling mouse clicks in canvas when forms are active. 
 
 document.addEventListener('DOMContentLoaded', () => {
-  // old code for changing form text into input boxes
-  // document.querySelectorAll('.editable').forEach( (editable) => {
-  //   editable.onclick = () => {
-  //     if(!(editable.classList.contains('inEditMode'))){
-  //       //only if the classlist doesn't have inEditMode
-  //       const text = editable.innerHTML;
-  //       let input;
-  //       if(editable.id == 'item-notes'){
-  //
-  //         input = document.createElement('textarea')
-  //         input.rows = '10';
-  //         input.cols = '40';
-  //         input.innerHTML = `${text}`;
-  //       }
-  //       else{
-  //         input = document.createElement('input')
-  //         input.type = 'text';
-  //         input.value = text;
-  //       }
-  //
-  //       editable.innerHTML = '';
-  //       editable.append(input)
-  //       //add inEditMode to class list
-  //       editable.classList.add("inEditMode");
-  //       input.focus();
-  //     }
-  //
-  //   };
-  // });
-
   var overlay = document.getElementById('side-form-overlay');
 
   document.querySelector('#tag-list').innerHTML = displayedTags.join(', ');
@@ -168,6 +139,36 @@ document.addEventListener('DOMContentLoaded', () => {
       // if the sideform is not on display, make sure the mouseclick is enabled
       mouseEnabled = true;
     }
+
+    // old code for changing form text into input boxes
+    // document.querySelectorAll('.editable').forEach( (editable) => {
+    //   editable.onclick = () => {
+    //     if(!(editable.classList.contains('inEditMode'))){
+    //       //only if the classlist doesn't have inEditMode
+    //       const text = editable.innerHTML;
+    //       let input;
+    //       if(editable.id == 'item-notes'){
+    //
+    //         input = document.createElement('textarea')
+    //         input.rows = '10';
+    //         input.cols = '40';
+    //         input.innerHTML = `${text}`;
+    //       }
+    //       else{
+    //         input = document.createElement('input')
+    //         input.type = 'text';
+    //         input.value = text;
+    //       }
+    //
+    //       editable.innerHTML = '';
+    //       editable.append(input)
+    //       //add inEditMode to class list
+    //       editable.classList.add("inEditMode");
+    //       input.focus();
+    //     }
+    //
+    //   };
+    // });
     // if event target doesn't have 'inEditMode' class,
     // then for each inEditMode
     // if (!(event.target.classList.contains('inEditMode'))){
@@ -179,12 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // }
   }
 });
-
-
-let itemTable;
-
-let maxNumItems = 0;
-
 
 function preload(){
 
@@ -336,6 +331,7 @@ function mouseDragged(){
   }
 
 }
+
 function mouseClicked(){
   // console.log(`${mouseX},${mouseY}`);
   if (mouseEnabled){
@@ -671,7 +667,4 @@ function draw() {
     text(buttons[buttons.length-i-1].text,buttonX,buttonY+6);
     pop();
   }
-
-
-
 }
