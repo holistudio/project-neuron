@@ -252,8 +252,10 @@ function setup() {
   let canvas = createCanvas(windowWidth, windowHeight*0.9);
   //calculate where the category abd item circle centers are
   //2 x 3 grid for the six categories
-  var numRows = 2;
+
   var numCols = 3;
+  var numRows = Math.ceil(Object.keys(archive).length/numCols) ;
+  console.log(numRows);
   var padding = 200; //to make way for inserted tags
   var gridX = (width-padding)/numCols;
   var gridY = height/numRows;
