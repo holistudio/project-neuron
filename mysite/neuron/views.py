@@ -36,12 +36,16 @@ def category_update(request):
 		#if delete item is in the keys of the request
 		if 'delete_button' in request.POST.keys():
 			#delete the item instead of updating
-			cat = cat.objects.get(id = request.POST["category_id"]);
+			cat = Category.objects.get(id = request.POST["category_id"]);
 			cat.delete();
 		else:
 			#find item's corresponding category or create one if new category
 			category, created = Category.objects.get_or_create(
-			name=request.POST['category_name']);
+			id=request.POST['category_id']);
+
+			#update the category's name
+			category.name = request.POST['category_name'];
+			category.save();
 	#redirect to index
 	return HttpResponseRedirect(reverse("neuron:index"));
 def item_update(request):
