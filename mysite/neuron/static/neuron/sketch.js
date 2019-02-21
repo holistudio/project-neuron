@@ -345,6 +345,9 @@ function mouseClicked(){
         mouseX<buttons[i].coord.x+buttonWidth &&
         mouseY>buttons[i].coord.y &&
         mouseY<buttons[i].coord.y+buttonHeight){
+          document.querySelectorAll('.delete-button').forEach( (b) => {
+            b.style.display="none";
+          });
           if(buttons[i].name=='addItem'){
             document.querySelector('#side-form-overlay').style.display = "block";
             document.querySelector('#item-form').style.display = "block";
@@ -431,7 +434,9 @@ function mouseClicked(){
         document.querySelector('#item-form').style.display = "none";
         document.querySelector('#category-form').style.display = "block";
         const form = document.querySelector('#category-form').children;
-
+        document.querySelectorAll('.delete-button').forEach( (b) => {
+          b.style.display="block";
+        });
         for (let i = 0; i < form.length; i++) {
           //for each child of div side-form-content, get the first element
           // with class "editable"
@@ -479,7 +484,9 @@ function mouseClicked(){
               document.querySelector('#item-form').style.display = "block";
               document.querySelector('#category-form').style.display = "none";
               const form = document.querySelector('#item-form').children;
-
+              document.querySelectorAll('.delete-button').forEach( (b) => {
+                b.style.display="block";
+              });
               for (let i = 0; i < form.length; i++) {
                 //for each child of div side-form-content, get the first element with class "editable"
                 const formElement = form[i].firstElementChild;
@@ -536,7 +543,7 @@ function draw() {
     const y = archive[category].coordinates.y;
 
     if (archive[category].active) {
-      fill(204, 255, 255);
+      fill(157, 191, 251);
     }
     else{
       fill(0.9*255);
@@ -547,13 +554,17 @@ function draw() {
     //draw  a circle of categoryDia
     ellipse(x,y,archive[category].diameter,archive[category].diameter);
 
-
-
-    fill(0)
     //draw category labels outside the circles
     textSize(24);
     textAlign(CENTER);
     rectMode(CENTER);
+
+    if (archive[category].active) {
+      fill(84, 144, 248);
+    }
+    else{
+      fill(0.7*255);
+    }
 
     text(
       archive[category].name.toUpperCase(),
@@ -611,7 +622,7 @@ function draw() {
       }
       else{
         if (item.active) {
-          fill(51, 204, 255);
+          fill(8,79,205);
         }
         else{
           fill(0,0.3*255);
