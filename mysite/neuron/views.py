@@ -22,8 +22,8 @@ def index(request):
 		#get list of tags for each item
 		item['tags'] = list(Item.objects.get(id=item['id']).tags.all().values_list('name', flat=True));
 
-	category_list = Category.objects.all();
-	tag_list = Tag.objects.all();
+	category_list = list(Category.objects.all().values());
+	tag_list = list(Tag.objects.all().values());
 	context = {
 		'item_list': item_list,
         'category_list': category_list,

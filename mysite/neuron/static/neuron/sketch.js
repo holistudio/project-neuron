@@ -51,6 +51,7 @@ var archive={}; //JSON so that the keys can be strings
 ]
 */
 let maxItemID = 0;
+let maxCategoryID = 0;
 var selectedCategories=[];
 var displayedTags = [];
 /*[
@@ -116,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //   };
   // });
 
-  var overlay = document.getElementById('item-form-overlay');
+  var overlay = document.getElementById('side-form-overlay');
 
   document.querySelector('#tag-list').innerHTML = displayedTags.join(', ');
   document.querySelector('#tag-display-form').onsubmit = () => {
@@ -139,6 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     return false;
   };
+
+  document.querySelectorAll('.cancel-button').forEach( (b) => {
+    b.onclick = () => {
+      overlay.style.display = "none";
+      mouseEnabled = true;
+      return false;
+    }
+  });
 
   window.onclick = function(event) {
     //if the sideform is on display
@@ -183,13 +192,31 @@ function preload(){
 
 function setup() {
   var itemTable = window.itemTable;
+  var categoryTable = window.categoryTable;
+
   //for each row in the table,
   for (let i=0; i<itemTable.length; i++) {
     //get the row's category
     const itemCategory = itemTable[i].category;
+
     //if that category isn't in archive, add it to archive
     if(archive[itemCategory] == undefined){
-      archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[], "active":false}
+      //find the category's database ID
+      let categoryFound = false;
+      let j = 0;
+      let categoryID;
+      while (!categoryFound) {
+        if(categoryTable[j].name == itemCategory){
+          categoryFound = true;
+          categoryID = categoryTable[j].id;
+        }
+        else{
+          j++;
+        }
+      }
+
+
+      archive[itemCategory]={"name": itemCategory, "numItems": 0, "items":[], "active":false, "id": categoryID}
     }
 
     //add the item to appropriate category's items list
@@ -205,8 +232,13 @@ function setup() {
     //increment category's numItems by 1
     archive[itemCategory].numItems++;
 
+    //find the max Item ID for adding new items
     if(int(itemTable[i].id)>maxItemID){
       maxItemID = int(itemTable[i].id);
+    }
+    //find the max Category ID for adding new categories
+    if(archive[itemCategory].id > maxCategoryID){
+      maxCategoryID = archive[itemCategory].id;
     }
   }
 
@@ -329,11 +361,13 @@ function mouseClicked(){
         mouseY>buttons[i].coord.y &&
         mouseY<buttons[i].coord.y+buttonHeight){
           if(buttons[i].name=='addItem'){
-            document.querySelector('#item-form-overlay').style.display = "block";
+            document.querySelector('#side-form-overlay').style.display = "block";
+            document.querySelector('#item-form').style.display = "block";
+            document.querySelector('#category-form').style.display = "none";
             const form = document.querySelector('#item-form').children;
 
             for (let i = 0; i < form.length; i++) {
-              //for each child of div item-form-content, get the first element
+              //for each child of div side-form-content, get the first element
               // with class "editable"
               const formElement = form[i].firstElementChild;
               if (formElement != undefined){
@@ -352,7 +386,7 @@ function mouseClicked(){
                 }
                 else{
                   //Change button's text to 'Add Button'
-                  if (formElement.name=='submit-button'){
+                  if (formElement.name=='submit_button'){
                     formElement.innerHTML= 'Add Item';
                   }
                 }
@@ -360,6 +394,40 @@ function mouseClicked(){
               }
             }
             //assign new id to this new add item form
+          }
+          else if (buttons[i].name=='addCategory') {
+            document.querySelector('#side-form-overlay').style.display = "block";
+            document.querySelector('#item-form').style.display = "none";
+            document.querySelector('#category-form').style.display = "block";
+            const form = document.querySelector('#category-form').children;
+
+            for (let i = 0; i < form.length; i++) {
+              //for each child of div side-form-content, get the first element
+              // with class "editable"
+              const formElement = form[i].firstElementChild;
+              if (formElement != undefined){
+                if(formElement.classList.contains('editable')){
+                  //clear input boxes
+                  const key = formElement.name.split('_')[1];
+                  if(key=='notes' || key =='description'){
+                    formElement.innerHTML='';
+                  }
+                  else if (key=='id') {
+                    formElement.value=maxCategoryID+1;
+                  }
+                  else{
+                    formElement.value='';
+                  }
+                }
+                else{
+                  //Change button's text to 'Add Button'
+                  if (formElement.name=='submit_button'){
+                    formElement.innerHTML= 'Add Category';
+                  }
+                }
+
+              }
+            }
           }
         }
     }
@@ -384,11 +452,13 @@ function mouseClicked(){
               item.active=true;
               itemClicked = true;
 
-              document.querySelector('#item-form-overlay').style.display = "block";
+              document.querySelector('#side-form-overlay').style.display = "block";
+              document.querySelector('#item-form').style.display = "block";
+              document.querySelector('#category-form').style.display = "none";
               const form = document.querySelector('#item-form').children;
 
               for (let i = 0; i < form.length; i++) {
-                //for each child of div item-form-content, get the first element with class "editable"
+                //for each child of div side-form-content, get the first element with class "editable"
                 const formElement = form[i].firstElementChild;
                 if (formElement != undefined){
                   if(formElement.classList.contains('editable')){
@@ -405,7 +475,7 @@ function mouseClicked(){
                   }
                   else{
                     //Change button's text to 'Add Button'
-                    if (formElement.name=='submit-button'){
+                    if (formElement.name=='submit_button'){
                       formElement.innerHTML= 'Update Item';
                     }
                   }
