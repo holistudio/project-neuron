@@ -239,7 +239,6 @@ function setup() {
 
   var numCols = 3;
   var numRows = Math.ceil(Object.keys(archive).length/numCols) ;
-  console.log(numRows);
   var padding = 200; //to make way for inserted tags
   var gridX = (width-padding)/numCols;
   var gridY = height/numRows;
@@ -422,6 +421,44 @@ function mouseClicked(){
       const radius = archive[category].diameter/2;
       const x = archive[category].coordinates.x;
       const y = archive[category].coordinates.y;
+
+      const categoryLabelY = y-radius-12;
+      if (mouseX < (x+100) &&
+      mouseX >(x-100) &&
+      mouseY < (categoryLabelY+36) &&
+      mouseY > (categoryLabelY-36)){
+        document.querySelector('#side-form-overlay').style.display = "block";
+        document.querySelector('#item-form').style.display = "none";
+        document.querySelector('#category-form').style.display = "block";
+        const form = document.querySelector('#category-form').children;
+
+        for (let i = 0; i < form.length; i++) {
+          //for each child of div side-form-content, get the first element
+          // with class "editable"
+          const formElement = form[i].firstElementChild;
+          if (formElement != undefined){
+            if(formElement.classList.contains('editable')){
+              //clear input boxes
+              const key = formElement.name.split('_')[1];
+              if(key=='notes' || key =='description'){
+                formElement.innerHTML='';
+              }
+              else if (key=='id') {
+                formElement.value=archive[category].id;
+              }
+              else{
+                formElement.value=`${archive[category][key]}`;
+              }
+            }
+            else{
+              //Change button's text to 'Add Button'
+              if (formElement.name=='submit_button'){
+                formElement.innerHTML= 'Update Category';
+              }
+            }
+          }
+        }
+      }
       if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
         let itemClicked = false;
         //for each item in the category that the mouse cursor is in
@@ -518,7 +555,12 @@ function draw() {
     textAlign(CENTER);
     rectMode(CENTER);
 
-    text(archive[category].name.toUpperCase(),archive[category].coordinates.x,archive[category].coordinates.y-archive[category].diameter/2-12,200,72);
+    text(
+      archive[category].name.toUpperCase(),
+      archive[category].coordinates.x,
+      archive[category].coordinates.y-archive[category].diameter/2-12,
+      200,
+      72);
   }
 
   strokeWeight(1);
