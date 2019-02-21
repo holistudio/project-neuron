@@ -43,9 +43,19 @@ def category_update(request):
 			category, created = Category.objects.get_or_create(
 			id=request.POST['category_id']);
 
-			#update the category's name
-			category.name = request.POST['category_name'];
-			category.save();
+			#if the category was not created, not new, then
+			if (not created):
+				#find the Tag model instance that shares the category's old name
+				#and change that as well.
+				try:
+					tag = Tag.objects.get(name = category.name);
+					tag.name = request.POST['category_name'];
+					tag.save();
+				except:
+					print('Tag with the same name as the old category name does not exist');
+				#update the category's name
+				category.name = request.POST['category_name'];
+				category.save();
 	#redirect to index
 	return HttpResponseRedirect(reverse("neuron:index"));
 def item_update(request):
