@@ -13,6 +13,17 @@ html, body {
 h4{
   font-weight: normal;
 }
+
+a:link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #007bff;
+  text-decoration: none;
+}
+
 .top-bar{
   margin: 20px;
 }
