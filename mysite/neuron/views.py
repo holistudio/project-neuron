@@ -41,7 +41,8 @@ def category_update(request):
 		else:
 			#find item's corresponding category or create one if new category
 			category, created = Category.objects.get_or_create(
-			id=request.POST['category_id']);
+			id=request.POST['category_id'],
+			defaults = {'name': request.POST['category_name']});
 
 			#if the category was not created, not new, then
 			if (not created):
