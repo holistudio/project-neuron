@@ -1,8 +1,5 @@
-//categories and their coordinates
-var categoryDia = 200;
 let maxNumItems = 0; //max number of items in a category, which will scale the
                      //diameters of the category circles drawn.
-var itemDia = 10;
 var archive={}; //JSON so that the keys can be strings
 /* {
     "design principles":
@@ -60,9 +57,6 @@ var displayedTags = [];
   {name:'tangible',
   coordinates: {x:30, y:32}},
 ]*/
-var tagDisplayStart = {x:100, y:50};
-var tagDisplaySpace = 50;
-var tDUnitWidth = 10;
 
 var tagDisplayColors = [
   [8,79,205], //blue
@@ -71,11 +65,6 @@ var tagDisplayColors = [
   [249,228,49] // yellow
 ];
 
-//canvas buttons
-const buttonWidth = 120;
-const buttonHeight = 40;
-const buttonPadding = 10;
-const buttonMenuCoord = {x:20,y:-20}; //bottom left corner of the menu
 let buttons = [
   {
     name: 'addItem',
@@ -86,6 +75,20 @@ let buttons = [
   }];
 
 let mouseEnabled = true; //mouse enable/disable variable for disabling mouse clicks in canvas when forms are active.
+
+let scale;
+let categoryDia;
+let itemDia;
+//canvas buttons
+let buttonWidth;
+let buttonHeight;
+let buttonPadding;
+let buttonMenuCoord; //bottom left corner of the menu
+
+//tag display area
+let tagDisplayStart;
+let tagDisplaySpace;
+let tDUnitWidth;
 
 document.addEventListener('DOMContentLoaded', () => {
   var overlay = document.getElementById('side-form-overlay');
@@ -232,9 +235,23 @@ function setup() {
   //calculate where the category abd item circle centers are
   //assuming a 3 column grid
 
+  scale = windowWidth/1600;
+  categoryDia = map(scale,0,1,75,200);
+  itemDia = map(scale,0,1,5,10);
+  //canvas buttons
+  buttonWidth = map(scale,0,1,90,120);
+  buttonHeight = map(scale,0,1,20,40);
+  buttonPadding = map(scale,0,1,5,10);
+  buttonMenuCoord = {x:20,y:-20}; //bottom left corner of the menu
+
+  //tag display area
+  tagDisplayStart = {x:map(scale,0,1,25,100), y:map(scale,0,1,25,50)};
+  tagDisplaySpace = map(scale,0,1,25,50);
+  tDUnitWidth = 10*scale;
+
   var numCols = 3;
   var numRows = Math.ceil(Object.keys(archive).length/numCols) ;
-  var padding = 200; //to make way for inserted tags
+  var padding = 200*scale; //to make way for inserted tags
   var gridX = (width-padding)/numCols;
   var gridY = height/numRows;
   var startX = padding + gridX/2;
@@ -243,7 +260,7 @@ function setup() {
   let c=0;
   for (category in archive) {
     //category diameter is in proportion to the number of items
-    archive[category]["diameter"] = map(archive[category].numItems,0,maxNumItems,75,categoryDia);
+    archive[category]["diameter"] = map(archive[category].numItems,0,maxNumItems,75*scale,categoryDia);
     archive[category]["coordinates"] = {x: startX+c*gridX, y:startY+r*gridY}
 
     //for each item in the category
@@ -319,7 +336,7 @@ function mouseDragged(){
   for (var i = 0; i < displayedTags.length; i++) {
     const e = displayedTags[i];
     const boxW = e.name.length*tDUnitWidth;
-    const boxH = 24;
+    const boxH = map(scale,0,1,16,24);
 
 
     if (((mouseX <= e.coordinates.x+boxW/2) && (mouseX >= e.coordinates.x-boxW/2)) &&
@@ -551,7 +568,7 @@ function draw() {
     ellipse(x,y,archive[category].diameter,archive[category].diameter);
 
     //draw category labels outside the circles
-    textSize(24);
+    textSize(map(scale,0,1,16,24));
     textAlign(CENTER);
     rectMode(CENTER);
 
@@ -566,8 +583,8 @@ function draw() {
       archive[category].name.toUpperCase(),
       archive[category].coordinates.x,
       archive[category].coordinates.y-archive[category].diameter/2-12,
-      200,
-      72);
+      map(scale,0,1,75,200),
+      map(scale,0,1,48,72));
   }
 
   strokeWeight(1);
@@ -641,7 +658,7 @@ function draw() {
   // place tagName text in the on top of screen
   push();
   fill(0);
-  textSize(24);
+  textSize(map(scale,0,1,16,24));
   textAlign(CENTER);
   rectMode(CENTER);
   for (var i = 0; i < displayedTags.length; i++) {
@@ -663,7 +680,7 @@ function draw() {
     fill(255);
     // textAlign(CENTER);
     // rectMode(CENTER);
-    textSize(16);
+    textSize(map(scale,0,1,12,16));
     text(buttons[buttons.length-i-1].text,buttonX,buttonY+6);
     pop();
   }
