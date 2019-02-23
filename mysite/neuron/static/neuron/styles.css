@@ -53,3 +53,7 @@ h4{
 .form-section{
   margin-top: 12px;
 }
+
+.form-section textarea{
+  display: block;
+}
