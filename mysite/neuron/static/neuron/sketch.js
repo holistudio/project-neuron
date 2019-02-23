@@ -235,7 +235,7 @@ function setup() {
   //calculate where the category abd item circle centers are
   //assuming a 3 column grid
 
-  scale = windowWidth/1600;
+  scale = windowWidth/2800;
   categoryDia = map(scale,0,1,75,200);
   itemDia = map(scale,0,1,3,10);
   //canvas buttons
@@ -253,7 +253,7 @@ function setup() {
   var numRows = Math.ceil(Object.keys(archive).length/numCols) ;
   var padding = 200*scale; //to make way for inserted tags
   var gridX = (width-padding)/numCols;
-  var gridY = (height-50)/numRows;
+  var gridY = (height)/numRows;
   var startX = padding + gridX/2;
   var startY = gridY/2;
   let r=0;
