@@ -614,13 +614,21 @@ function draw() {
 
       //if that item also shares a selected tag name, draw a blue line
       push();
-      stroke(8,79,205);
+
+      let col = 0;
       for (let j = 0; j < displayedTags.length; j++) {
+        stroke(tagDisplayColors[col][0],tagDisplayColors[col][1],tagDisplayColors[col][2]);
         if(item.tags.toString().includes(displayedTags[j].name)){
           line(item.coordinates.x,
             item.coordinates.y,
             displayedTags[j].coordinates.x,
             displayedTags[j].coordinates.y);
+        }
+        if(col< tagDisplayColors.length-1){
+          col++;
+        }
+        else{
+          col=0;
         }
       }
       pop();
