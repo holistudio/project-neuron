@@ -253,7 +253,7 @@ function setup() {
   var numRows = Math.ceil(Object.keys(archive).length/numCols) ;
   var padding = 200*scale; //to make way for inserted tags
   var gridX = (width-padding)/numCols;
-  var gridY = height/numRows;
+  var gridY = (height-buttons.length*(buttonHeight+buttonPadding)-20)/numRows;
   var startX = padding + gridX/2;
   var startY = gridY/2;
   let r=0;
