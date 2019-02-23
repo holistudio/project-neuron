@@ -3,11 +3,13 @@ html, body {
   padding: 0;
   font-family: "Gill Sans", Arial, Helvetica, sans-serif;
 }
+
 #canvas-container canvas {
   display: block;
   width: 100% !important;
   height: auto !important;
 }
+
 h4{
   font-weight: normal;
 }
