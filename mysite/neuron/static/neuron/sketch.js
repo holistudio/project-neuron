@@ -582,7 +582,7 @@ function draw() {
     text(
       archive[category].name.toUpperCase(),
       archive[category].coordinates.x,
-      archive[category].coordinates.y-archive[category].diameter/2-12,
+      archive[category].coordinates.y-archive[category].diameter/2-16,
       map(scale,0,1,75,200),
       map(scale,0,1,42,72));
   }
