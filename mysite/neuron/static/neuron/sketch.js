@@ -440,9 +440,9 @@ function mouseClicked(){
 
       const categoryLabelY = y-radius-12;
       if (mouseX < (x+(map(scale,0,1,75,200)/2)) &&
-      mouseX >(x-(map(scale,0,1,75,200)/2)) &&
-      mouseY < (categoryLabelY+(map(scale,0,1,42,72)/2)) &&
-      mouseY > (categoryLabelY-(map(scale,0,1,42,72)/2))){
+          mouseX >(x-(map(scale,0,1,75,200)/2)) &&
+          mouseY < (categoryLabelY+(map(scale,0,1,42,72)/2)) &&
+          mouseY > (categoryLabelY-(map(scale,0,1,42,72)/2))){
         document.querySelector('#side-form-overlay').style.display = "block";
         document.querySelector('#item-form').style.display = "none";
         document.querySelector('#category-form').style.display = "block";
@@ -486,13 +486,12 @@ function mouseClicked(){
           const itemX = item.coordinates.x;
           const itemY = item.coordinates.y;
           if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius)){
+            itemClicked = true;
             if (item.active) {
               item.active=false;
             }
             else{
               item.active=true;
-              itemClicked = true;
-
               document.querySelector('#side-form-overlay').style.display = "block";
               document.querySelector('#item-form').style.display = "block";
               document.querySelector('#category-form').style.display = "none";
@@ -529,18 +528,21 @@ function mouseClicked(){
           }
 
         }
-        if (archive[category].active && (!itemClicked)) {
-          archive[category].active=false;
-          const remIndex = selectedCategories.indexOf(archive[category].name);
-          selectedCategories.splice(remIndex,1);
-        }
-        else{
-          archive[category].active=true;
-          if (!selectedCategories.includes(archive[category].name)){
-            selectedCategories.push(archive[category].name);
-          }
 
+        if(!itemClicked){
+          if (archive[category].active) {
+            archive[category].active=false;
+            const remIndex = selectedCategories.indexOf(archive[category].name);
+            selectedCategories.splice(remIndex,1);
+          }
+          else{
+            archive[category].active=true;
+            if (!selectedCategories.includes(archive[category].name)){
+              selectedCategories.push(archive[category].name);
+            }
+          }
         }
+
         document.querySelector('#category-list').innerHTML=selectedCategories.join(', ');
       }
     }
