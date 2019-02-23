@@ -85,7 +85,7 @@ let buttons = [
     text: 'Add Category'
   }];
 
-let mouseEnabled = true; //mouse enable/disable variable for disabling mouse clicks in canvas when forms are active. 
+let mouseEnabled = true; //mouse enable/disable variable for disabling mouse clicks in canvas when forms are active.
 
 document.addEventListener('DOMContentLoaded', () => {
   var overlay = document.getElementById('side-form-overlay');
@@ -228,9 +228,9 @@ function setup() {
     }
   }
 
-  let canvas = createCanvas(windowWidth, windowHeight*0.9);
+  let canvas = createCanvas(windowWidth, windowHeight*0.8);
   //calculate where the category abd item circle centers are
-  //2 x 3 grid for the six categories
+  //assuming a 3 column grid
 
   var numCols = 3;
   var numRows = Math.ceil(Object.keys(archive).length/numCols) ;
