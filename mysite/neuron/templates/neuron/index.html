@@ -33,26 +33,26 @@
       <div id="side-form-content" class="rightFormContent">
         <form id="item-form" action="{% url 'neuron:item_update' %}" method="post">
       		{% csrf_token %}
-          <h4>Title: <input type="text" name="item_title" class="editable" autocomplete="off"></span></h4>
+          <h4 class="form-section">Title: <input type="text" name="item_title" class="editable long-text" autocomplete="off"></span></h4>
           <p><input type="text" class="editable" name="item_id" value="0" hidden readonly></p>
 
           <div class="form-section">Authors:
-            <input type="text" name="item_authors" class="editable"></div>
+            <input type="text" name="item_authors" class="editable long-text"></div>
           <div class="form-section">Date:
             <input type="text" name="item_date" class="editable" autocomplete="off"></div>
           <div class="form-section">Type:
             <input type="text" name="item_type" class="editable"></div>
           <div class="form-section">URL:
-            <input type="text" name="item_url" class="editable" autocomplete="off"></div>
+            <input type="text" name="item_url" class="editable long-text" autocomplete="off"></div>
           <div class="form-section">Category:
             <input type="text" name="item_category" class="editable"></div>
           <div class="form-section">Tags:
-            <input type="text" name="item_tags" class="editable" autocomplete="off"></div>
+            <input type="text" name="item_tags" class="editable long-text" autocomplete="off"></div>
           <div class="form-section">Description:
-            <textarea name="item_description" rows="3" cols="35" class="editable"></textarea></div>
+            <textarea name="item_description" rows="3" class="editable"></textarea></div>
           <div class="form-section">Notes:
             <!-- <div id="item-notes" class="editable" style="width: 250px; height: 150px; overflow-y:auto;"></div> -->
-            <textarea name="item_notes" rows="10" cols="35" class="editable"></textarea></div>
+            <textarea name="item_notes" rows="10" class="editable"></textarea></div>
           <div class="form-section">
             <button type="submit" form="item-form" name="submit_button">Save</button>
             <button class="cancel-button" form="item-form" name="cancel_button">Cancel</button>
