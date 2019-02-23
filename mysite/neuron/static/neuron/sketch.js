@@ -237,7 +237,7 @@ function setup() {
 
   scale = windowWidth/1600;
   categoryDia = map(scale,0,1,75,200);
-  itemDia = map(scale,0,1,5,10);
+  itemDia = map(scale,0,1,3,10);
   //canvas buttons
   buttonWidth = map(scale,0,1,90,120);
   buttonHeight = map(scale,0,1,20,40);
