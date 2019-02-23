@@ -614,7 +614,7 @@ function draw() {
       push();
       stroke(8,79,205);
       for (let j = 0; j < displayedTags.length; j++) {
-        if(item.tags.includes(displayedTags[j].name)){
+        if(item.tags.toString().includes(displayedTags[j].name)){
           line(item.coordinates.x,
             item.coordinates.y,
             displayedTags[j].coordinates.x,
