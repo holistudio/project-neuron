@@ -90,6 +90,39 @@ let tagDisplayStart;
 let tagDisplaySpace;
 let tDUnitWidth;
 
+function displayItemSideForm (item){
+  document.querySelector('#side-form-overlay').style.display = "block";
+  document.querySelector('#item-form').style.display = "block";
+  document.querySelector('#category-form').style.display = "none";
+  const form = document.querySelector('#item-form').children;
+  document.querySelectorAll('.delete-button').forEach( (b) => {
+    b.style.display="block";
+  });
+  for (let i = 0; i < form.length; i++) {
+    //for each child of div side-form-content, get the first element with class "editable"
+    const formElement = form[i].firstElementChild;
+    if (formElement != undefined){
+      if(formElement.classList.contains('editable')){
+        //get that element's id (author, notes, etc)
+        const key = formElement.name.split('_')[1];
+        if (item[key] != undefined) {
+          if(key=='notes' || key =='description'){
+            formElement.innerHTML=`${item[key]}`;
+          }
+          else{
+            formElement.value=`${item[key]}`;
+          }
+        }
+      }
+      else{
+        //Change button's text to 'Add Button'
+        if (formElement.name=='submit_button'){
+          formElement.innerHTML= 'Update Item';
+        }
+      }
+    }
+  }
+}
 document.addEventListener('DOMContentLoaded', () => {
   var overlay = document.getElementById('side-form-overlay');
 
@@ -119,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     b.onclick = () => {
       overlay.style.display = "none";
       mouseEnabled = true;
+      document.querySelector('#item-list').innerHTML='';
       return false;
     }
   });
@@ -131,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // if the click is outside the form, hide the form and enable the mouse click
         overlay.style.display = "none";
         mouseEnabled = true;
+        document.querySelector('#item-list').innerHTML='';
       }
       else{
         // else if the click is inside the form, disable the mouse click on
@@ -472,6 +507,21 @@ function mouseClicked(){
               //Change button's text to 'Add Button'
               if (formElement.name=='submit_button'){
                 formElement.innerHTML= 'Update Category';
+              }
+              if (formElement.id=="item-list"){
+                for (let j = 0; j < archive[category].items.length; j++) {
+                  const item = archive[category].items[j]
+                  const title = archive[category].items[j].title;
+                  const bullet = document.createElement('li');
+                  const link = document.createElement('a');
+                  link.innerHTML = title;
+                  link.href = '#'
+                  bullet.onclick = () => {
+                    displayItemSideForm(item);
+                  };
+                  bullet.appendChild(link);
+                  formElement.appendChild(bullet);
+                }
               }
             }
           }
