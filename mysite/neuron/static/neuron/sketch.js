@@ -439,10 +439,10 @@ function mouseClicked(){
       const y = archive[category].coordinates.y;
 
       const categoryLabelY = y-radius-12;
-      if (mouseX < (x+100) &&
-      mouseX >(x-100) &&
-      mouseY < (categoryLabelY+36) &&
-      mouseY > (categoryLabelY-36)){
+      if (mouseX < (x+(map(scale,0,1,75,200)/2)) &&
+      mouseX >(x-(map(scale,0,1,75,200)/2)) &&
+      mouseY < (categoryLabelY+(map(scale,0,1,42,72)/2)) &&
+      mouseY > (categoryLabelY-(map(scale,0,1,42,72)/2))){
         document.querySelector('#side-form-overlay').style.display = "block";
         document.querySelector('#item-form').style.display = "none";
         document.querySelector('#category-form').style.display = "block";
@@ -568,7 +568,7 @@ function draw() {
     ellipse(x,y,archive[category].diameter,archive[category].diameter);
 
     //draw category labels outside the circles
-    textSize(map(scale,0,1,16,24));
+    textSize(map(scale,0,1,14,24));
     textAlign(CENTER);
     rectMode(CENTER);
 
@@ -584,7 +584,7 @@ function draw() {
       archive[category].coordinates.x,
       archive[category].coordinates.y-archive[category].diameter/2-12,
       map(scale,0,1,75,200),
-      map(scale,0,1,48,72));
+      map(scale,0,1,42,72));
   }
 
   strokeWeight(1);
@@ -603,7 +603,10 @@ function draw() {
         else{
           stroke(0, 0, 0, 0.1*255);
         }
-        line(item.coordinates.x,item.coordinates.y,item.catLineEndPts[j].x,item.catLineEndPts[j].y);
+        line(item.coordinates.x,
+          item.coordinates.y,
+          item.catLineEndPts[j].x,
+          item.catLineEndPts[j].y);
       }
 
 
@@ -612,7 +615,10 @@ function draw() {
       stroke(8,79,205);
       for (let j = 0; j < displayedTags.length; j++) {
         if(item.tags.includes(displayedTags[j].name)){
-          line(item.coordinates.x,item.coordinates.y,displayedTags[j].coordinates.x,displayedTags[j].coordinates.y);
+          line(item.coordinates.x,
+            item.coordinates.y,
+            displayedTags[j].coordinates.x,
+            displayedTags[j].coordinates.y);
         }
       }
       pop();
