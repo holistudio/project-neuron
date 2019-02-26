@@ -23,7 +23,9 @@ def index(request):
 		item['tags'] = list(Item.objects.get(id=item['id']).tags.all().values_list('name', flat=True));
 
 	category_list = list(Category.objects.all().values());
+
 	tag_list = list(Tag.objects.all().values());
+
 	context = {
 		'item_list': item_list,
         'category_list': category_list,
@@ -94,7 +96,7 @@ def item_update(request):
 			#for each model field of Item, update with the corresponding
 			#POST request object
 			for field in Item._meta.get_fields():
-				#if the field is category set to category object instead
+				#if the field is category/tag set to category/tag object instead
 				if field.name == 'category':
 					setattr(item,field.name,category);
 				elif field.name =='tags':

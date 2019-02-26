@@ -1,6 +1,6 @@
 let maxNumItems = 0; //max number of items in a category, which will scale the
                      //diameters of the category circles drawn.
-var archive={}; //JSON so that the keys can be strings
+var archive={}; //JSON of the database items organized by category
 /* {
     "design principles":
     {"name": 'design principles',
@@ -49,8 +49,15 @@ var archive={}; //JSON so that the keys can be strings
     ...
 ]
 */
+
+//maxItemID and maxCategoryID are used to track the largest max IDs of Database
+//objects so that when new items or categories are created, the next largest id
+//can be assigned
+
 let maxItemID = 0;
 let maxCategoryID = 0;
+
+//array of categories and tags selected on the canvas, to be displayed in the DOM
 var selectedCategories=[];
 var displayedTags = [];
 /*[
@@ -58,6 +65,7 @@ var displayedTags = [];
   coordinates: {x:30, y:32}},
 ]*/
 
+//tag colors
 var tagDisplayColors = [
   [8,79,205], //blue
   [48,180,97], //green
@@ -65,6 +73,7 @@ var tagDisplayColors = [
   [249,228,49] // yellow
 ];
 
+//buttons for adding things to the canvas
 let buttons = [
   {
     name: 'addItem',
@@ -76,9 +85,11 @@ let buttons = [
 
 let mouseEnabled = true; //mouse enable/disable variable for disabling mouse clicks in canvas when forms are active.
 
+//canvas object sizing parameters
 let scale;
 let categoryDia;
 let itemDia;
+
 //canvas buttons
 let buttonWidth;
 let buttonHeight;
@@ -91,13 +102,16 @@ let tagDisplaySpace;
 let tDUnitWidth;
 
 function displayItemSideForm (item){
+  //display item form and side form overlay while hiding the category form
   document.querySelector('#side-form-overlay').style.display = "block";
   document.querySelector('#item-form').style.display = "block";
   document.querySelector('#category-form').style.display = "none";
-  const form = document.querySelector('#item-form').children;
+  //show delete button
   document.querySelectorAll('.delete-button').forEach( (b) => {
     b.style.display="block";
   });
+
+  const form = document.querySelector('#item-form').children;
   for (let i = 0; i < form.length; i++) {
     //for each child of div side-form-content, get the first element with class "editable"
     const formElement = form[i].firstElementChild;
@@ -105,6 +119,8 @@ function displayItemSideForm (item){
       if(formElement.classList.contains('editable')){
         //get that element's id (author, notes, etc)
         const key = formElement.name.split('_')[1];
+
+        //fill in the form with the existing item's data
         if (item[key] != undefined) {
           if(key=='notes' || key =='description'){
             formElement.innerHTML=`${item[key]}`;
@@ -115,7 +131,7 @@ function displayItemSideForm (item){
         }
       }
       else{
-        //Change button's text to 'Add Button'
+        //Change submit button's text to 'Update Item'
         if (formElement.name=='submit_button'){
           formElement.innerHTML= 'Update Item';
         }
@@ -126,7 +142,10 @@ function displayItemSideForm (item){
 document.addEventListener('DOMContentLoaded', () => {
   var overlay = document.getElementById('side-form-overlay');
 
+  //Display the selected tags as a list in the DOM
   document.querySelector('#tag-list').innerHTML = displayedTags.join(', ');
+
+  //Pressing Enter in the "Selected Tags" input box inserts tags into the canvas
   document.querySelector('#tag-display-form').onsubmit = () => {
     let nextPosition = tagDisplayStart;
     //find the next available spot in the default display position
@@ -135,9 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
         nextPosition.y = nextPosition.y+tagDisplaySpace;
       }
     }
-    const tagName = document.querySelector('#tag-display-input').value; //from form
+
+    //get the tag name from the form
+    const tagName = document.querySelector('#tag-display-input').value;
+
+    //clear the input
     document.querySelector('#tag-display-input').value = "";
+
+    //add the tag name to displayedTags
     displayedTags.push({name: tagName, coordinates: {x: nextPosition.x, y: nextPosition.y}});
+
+    //if there is only one item, display the tag, otherwise add a comma before
+    //the tag name so the list shows up with the correct placement of commas
     if (displayedTags.length<2){
       document.querySelector('#tag-list').innerHTML+=tagName;
     }
@@ -148,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   };
 
+  //pressing cancel on the side form will close the form and re-enable the mouse
   document.querySelectorAll('.cancel-button').forEach( (b) => {
     b.onclick = () => {
       overlay.style.display = "none";
@@ -267,9 +296,10 @@ function setup() {
   }
 
   let canvas = createCanvas(windowWidth, windowHeight*0.8);
-  //calculate where the category abd item circle centers are
+  //calculate where the category and item circle centers are
   //assuming a 3 column grid
 
+  //scale canvas objects based on window width
   scale = windowWidth/2800;
   categoryDia = map(scale,0,1,75,200);
   itemDia = map(scale,0,1,3,10);
@@ -284,9 +314,10 @@ function setup() {
   tagDisplaySpace = map(scale,0,1,25,50);
   tDUnitWidth = 10*scale;
 
+  //assume a 3-column grid for the category circles
   var numCols = 3;
   var numRows = Math.ceil(Object.keys(archive).length/numCols) ;
-  var padding = 200*scale; //to make way for inserted tags
+  var padding = 200*scale; //shift grid to the right to make way for inserted tags
   var gridX = (width-padding)/numCols;
   var gridY = (height)/numRows;
   var startX = padding + gridX/2;
@@ -294,7 +325,8 @@ function setup() {
   let r=0;
   let c=0;
   for (category in archive) {
-    //category diameter is in proportion to the number of items
+    //category diameter is in proportion to the maximum number of items
+    //in a single category
     archive[category]["diameter"] = map(archive[category].numItems,0,maxNumItems,75*scale,categoryDia);
     archive[category]["coordinates"] = {x: startX+c*gridX, y:startY+r*gridY}
 
@@ -364,15 +396,16 @@ function setup() {
 
   textFont("Gill Sans");
 
+  //insert canvas into the div container, '#canvas-container'
   canvas.parent('canvas-container')
 }
 
 function mouseDragged(){
+  //click and drag tag names inserted in the canvas
   for (var i = 0; i < displayedTags.length; i++) {
     const e = displayedTags[i];
     const boxW = e.name.length*tDUnitWidth;
     const boxH = map(scale,0,1,16,24);
-
 
     if (((mouseX <= e.coordinates.x+boxW/2) && (mouseX >= e.coordinates.x-boxW/2)) &&
     ((mouseY <= e.coordinates.y) && (mouseY >= e.coordinates.y-boxH))){
@@ -385,7 +418,6 @@ function mouseDragged(){
 }
 
 function mouseClicked(){
-  // console.log(`${mouseX},${mouseY}`);
   if (mouseEnabled){
     //handle button clicks
     for (let i = 0; i < buttons.length; i++) {
@@ -474,24 +506,31 @@ function mouseClicked(){
       const y = archive[category].coordinates.y;
 
       const categoryLabelY = y-radius-12;
+
+      //if user clicks on a category label on the canvas
       if (mouseX < (x+(map(scale,0,1,75,200)/2)) &&
           mouseX >(x-(map(scale,0,1,75,200)/2)) &&
           mouseY < (categoryLabelY+(map(scale,0,1,42,72)/2)) &&
           mouseY > (categoryLabelY-(map(scale,0,1,42,72)/2))){
+
+        //show the category form, hide the item form
         document.querySelector('#side-form-overlay').style.display = "block";
         document.querySelector('#item-form').style.display = "none";
         document.querySelector('#category-form').style.display = "block";
-        const form = document.querySelector('#category-form').children;
+
+        //show delete button
         document.querySelectorAll('.delete-button').forEach( (b) => {
           b.style.display="block";
         });
+
+        const form = document.querySelector('#category-form').children;
         for (let i = 0; i < form.length; i++) {
           //for each child of div side-form-content, get the first element
           // with class "editable"
           const formElement = form[i].firstElementChild;
           if (formElement != undefined){
             if(formElement.classList.contains('editable')){
-              //clear input boxes
+              //fill in the form with the existing category's data
               const key = formElement.name.split('_')[1];
               if(key=='notes' || key =='description'){
                 formElement.innerHTML='';
@@ -504,10 +543,11 @@ function mouseClicked(){
               }
             }
             else{
-              //Change button's text to 'Add Button'
+              //Change button's text to 'Update Category '
               if (formElement.name=='submit_button'){
                 formElement.innerHTML= 'Update Category';
               }
+              //List links to the items in that category
               if (formElement.id=="item-list"){
                 for (let j = 0; j < archive[category].items.length; j++) {
                   const item = archive[category].items[j]
@@ -527,28 +567,41 @@ function mouseClicked(){
           }
         }
       }
+
+      //if the mouseclick is inside a category circle
       if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
         let itemClicked = false;
         //for each item in the category that the mouse cursor is in
         for (let i=0; i<archive[category].items.length; i++){
+
           const item = archive[category].items[i];
           const itemRadius = itemDia/2;
           const itemX = item.coordinates.x;
           const itemY = item.coordinates.y;
+
+          //check if the click is inside the item
           if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius)){
             itemClicked = true;
             if (item.active) {
+              //deactivate if the item is already active
               item.active=false;
             }
             else{
+              //if the item is clicked
+              //activated the item
               item.active=true;
+
+              //display the side form and item form and hide the category form
               document.querySelector('#side-form-overlay').style.display = "block";
               document.querySelector('#item-form').style.display = "block";
               document.querySelector('#category-form').style.display = "none";
-              const form = document.querySelector('#item-form').children;
+
+              //show the delete button
               document.querySelectorAll('.delete-button').forEach( (b) => {
                 b.style.display="block";
               });
+
+              const form = document.querySelector('#item-form').children;
               for (let i = 0; i < form.length; i++) {
                 //for each child of div side-form-content, get the first element with class "editable"
                 const formElement = form[i].firstElementChild;
@@ -556,6 +609,8 @@ function mouseClicked(){
                   if(formElement.classList.contains('editable')){
                     //get that element's id (author, notes, etc)
                     const key = formElement.name.split('_')[1];
+
+                    //fill in the form with the existing item's data
                     if (item[key] != undefined) {
                       if(key=='notes' || key =='description'){
                         formElement.innerHTML=`${item[key]}`;
@@ -566,7 +621,7 @@ function mouseClicked(){
                     }
                   }
                   else{
-                    //Change button's text to 'Add Button'
+                    //Change submit button's text to 'Update Item'
                     if (formElement.name=='submit_button'){
                       formElement.innerHTML= 'Update Item';
                     }
@@ -579,13 +634,19 @@ function mouseClicked(){
 
         }
 
+        //if the item isn't clicked
         if(!itemClicked){
+          // if the category is active
           if (archive[category].active) {
+            //deactivated the category
             archive[category].active=false;
+
+            //remove the category for the selected category list
             const remIndex = selectedCategories.indexOf(archive[category].name);
             selectedCategories.splice(remIndex,1);
           }
           else{
+            //if the category isn't active, activate it and add to category list
             archive[category].active=true;
             if (!selectedCategories.includes(archive[category].name)){
               selectedCategories.push(archive[category].name);
@@ -593,6 +654,7 @@ function mouseClicked(){
           }
         }
 
+        //display the list of categories in the DOM
         document.querySelector('#category-list').innerHTML=selectedCategories.join(', ');
       }
     }
@@ -607,13 +669,13 @@ function draw() {
     const x = archive[category].coordinates.x;
     const y = archive[category].coordinates.y;
 
+    //category circle fill colors
     if (archive[category].active) {
       fill(157, 191, 251);
     }
     else{
       fill(0.9*255);
     }
-
 
     noStroke();
     //draw  a circle of categoryDia
@@ -624,6 +686,7 @@ function draw() {
     textAlign(CENTER);
     rectMode(CENTER);
 
+    //category label fill colors
     if (archive[category].active) {
       fill(84, 144, 248);
     }
@@ -631,6 +694,7 @@ function draw() {
       fill(0.7*255);
     }
 
+    //category labels
     text(
       archive[category].name.toUpperCase(),
       archive[category].coordinates.x,
@@ -661,19 +725,26 @@ function draw() {
           item.catLineEndPts[j].y);
       }
 
-
-      //if that item also shares a selected tag name, draw a blue line
+      //if that item also shares a selected tag name, draw a colored line
       push();
 
+      //index for tagDisplayColors
       let col = 0;
+
       for (let j = 0; j < displayedTags.length; j++) {
+        //line color for displayed tags in canvas cycles through the tagDisplayColors array
         stroke(tagDisplayColors[col][0],tagDisplayColors[col][1],tagDisplayColors[col][2]);
+
+        //if the item has a tag with a partial match to the selected tag,
+        //draw a line connecting the item to the selected tag on canvas
         if(item.tags.toString().includes(displayedTags[j].name)){
           line(item.coordinates.x,
             item.coordinates.y,
             displayedTags[j].coordinates.x,
             displayedTags[j].coordinates.y);
         }
+
+        //switch to a different color for the next tag displayed on canvas
         if(col< tagDisplayColors.length-1){
           col++;
         }
@@ -688,6 +759,7 @@ function draw() {
 
   noStroke();
 
+  //draw item dots
   for (category in archive) {
     //for each item in the category
     for (let i=0; i<archive[category].items.length; i++) {
@@ -732,9 +804,7 @@ function draw() {
   }
   pop();
 
-  //if that item has a tag sharing tagName, draw a line between that item
-
-  //buttons
+  //display buttons on canvas
   textAlign(CENTER);
   rectMode(CENTER);
   for (let i = 0; i < buttons.length; i++) {
