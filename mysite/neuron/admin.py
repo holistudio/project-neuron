@@ -9,7 +9,7 @@ from .models import Item, Category, Tag
 
 class ItemAdmin(admin.ModelAdmin):
 	list_display = ('title', 'authors', 'type', 'category');
-	fields = ['title', 'authors', 'type', 'url','tags'];
+	fields = ['title', 'authors', 'date', 'type', 'url','category','tags' , 'description', 'notes'];
 
 class ItemInline(admin.StackedInline):
 	model = Item;

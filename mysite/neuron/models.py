@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from datetime import date
 # Choice selections
 
 # Model Definitions
@@ -26,7 +26,7 @@ class Item(models.Model):
 
 	authors = models.CharField(blank=True,max_length=100);
 
-	date = models.DateField(auto_now=True, null=True);
+	date = models.DateField(blank=True,default=date.today().isoformat());
 
 	type = models.CharField(max_length=100, default='Article');
 
