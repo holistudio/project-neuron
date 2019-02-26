@@ -1,6 +1,8 @@
 # Project Neuron
 A graphical archive tool with which users can map the relationship between items to various categories and tags. This can assist in interdisciplinary research, where items of interest often fall under multiple categories and have specific themes, subtopics, and ideas that are worth tracking.
 
+![Screenshot](screenshot.png)
+
 ## Django
 The current version of this webapp lives in the mysite folder as a Django webapp. The neuron folder contains the primary Django framework files (models.py, views.py, admin.py, etc). So to demo the app yourself, clone this repo, open command line in the mysite folder, and type in `python3 manage.py runserver`.
 
