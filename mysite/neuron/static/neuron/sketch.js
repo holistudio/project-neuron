@@ -567,46 +567,9 @@ function mouseClicked(){
             }
             else{
               //if the item is clicked
-              //activated the item
+              //activate the item
               item.active=true;
-
-              //display the side form and item form and hide the category form
-              document.querySelector('#side-form-overlay').style.display = "block";
-              document.querySelector('#item-form').style.display = "block";
-              document.querySelector('#category-form').style.display = "none";
-
-              //show the delete button
-              document.querySelectorAll('.delete-button').forEach( (b) => {
-                b.style.display="block";
-              });
-
-              const form = document.querySelector('#item-form').children;
-              for (let i = 0; i < form.length; i++) {
-                //for each child of div side-form-content, get the first element with class "editable"
-                const formElement = form[i].firstElementChild;
-                if (formElement != undefined){
-                  if(formElement.classList.contains('editable')){
-                    //get that element's id (author, notes, etc)
-                    const key = formElement.name.split('_')[1];
-
-                    //fill in the form with the existing item's data
-                    if (item[key] != undefined) {
-                      if(key=='notes' || key =='description'){
-                        formElement.innerHTML=`${item[key]}`;
-                      }
-                      else{
-                        formElement.value=`${item[key]}`;
-                      }
-                    }
-                  }
-                  else{
-                    //Change submit button's text to 'Update Item'
-                    if (formElement.name=='submit_button'){
-                      formElement.innerHTML= 'Update Item';
-                    }
-                  }
-                }
-              }
+              displaySideForm('item',false,item);
             }
           }
         }
