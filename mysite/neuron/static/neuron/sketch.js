@@ -102,7 +102,7 @@ let tagDisplaySpace;
 let tDUnitWidth;
 
 function displaySideForm(formType, formNew, obj){
-  console.log('in new function')
+  console.log('in displaySideForm')
   //formType is type of form (item, category, etc)
   //formNew is a boolean, true if for a new item or category
   //obj is the object to be updated, (archive[category] or item )
@@ -112,7 +112,27 @@ function displaySideForm(formType, formNew, obj){
     document.querySelector('#side-form-overlay').style.display = "block";
     document.querySelector('#item-form').style.display = "block";
     document.querySelector('#category-form').style.display = "none";
+  }
+  if(formType=='category'){
+    //show the category form, hide the item form
+    document.querySelector('#side-form-overlay').style.display = "block";
+    document.querySelector('#item-form').style.display = "none";
+    document.querySelector('#category-form').style.display = "block";
 
+    //List links to the items in that category
+    for (let j = 0; j < obj.items.length; j++) {
+      const item = obj.items[j]
+      const title = obj.items[j].title;
+      const bullet = document.createElement('li');
+      const link = document.createElement('a');
+      link.innerHTML = title;
+      link.href = '#'
+      bullet.onclick = () => {
+        displaySideForm('item',false,item);
+      };
+      bullet.appendChild(link);
+      document.querySelector('#item-list').appendChild(bullet);
+    }
   }
   if(formNew){
     //if the form  is for something new, hide the delete button.
@@ -524,60 +544,7 @@ function mouseClicked(){
           mouseX >(x-(map(scale,0,1,75,200)/2)) &&
           mouseY < (categoryLabelY+(map(scale,0,1,42,72)/2)) &&
           mouseY > (categoryLabelY-(map(scale,0,1,42,72)/2))){
-
-        //show the category form, hide the item form
-        document.querySelector('#side-form-overlay').style.display = "block";
-        document.querySelector('#item-form').style.display = "none";
-        document.querySelector('#category-form').style.display = "block";
-
-        //show delete button
-        document.querySelectorAll('.delete-button').forEach( (b) => {
-          b.style.display="block";
-        });
-
-        const form = document.querySelector('#category-form').children;
-        for (let i = 0; i < form.length; i++) {
-          //for each child of div side-form-content, get the first element
-          // with class "editable"
-          const formElement = form[i].firstElementChild;
-          if (formElement != undefined){
-            if(formElement.classList.contains('editable')){
-              //fill in the form with the existing category's data
-              const key = formElement.name.split('_')[1];
-              if(key=='notes' || key =='description'){
-                formElement.innerHTML='';
-              }
-              else if (key=='id') {
-                formElement.value=archive[category].id;
-              }
-              else{
-                formElement.value=`${archive[category][key]}`;
-              }
-            }
-            else{
-              //Change button's text to 'Update Category '
-              if (formElement.name=='submit_button'){
-                formElement.innerHTML= 'Update Category';
-              }
-              //List links to the items in that category
-              if (formElement.id=="item-list"){
-                for (let j = 0; j < archive[category].items.length; j++) {
-                  const item = archive[category].items[j]
-                  const title = archive[category].items[j].title;
-                  const bullet = document.createElement('li');
-                  const link = document.createElement('a');
-                  link.innerHTML = title;
-                  link.href = '#'
-                  bullet.onclick = () => {
-                    displaySideForm('item',false,item);
-                  };
-                  bullet.appendChild(link);
-                  formElement.appendChild(bullet);
-                }
-              }
-            }
-          }
-        }
+            displaySideForm('category',false,archive[category]);
       }
 
       //if the mouseclick is inside a category circle
