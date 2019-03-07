@@ -593,6 +593,12 @@ function mouseClicked(){
   }
 }
 
+function linedash(x1, y1, x2, y2, list) {
+   drawingContext.setLineDash(list); // set the "dashed line" mode
+   line(x1, y1, x2, y2); // draw the line
+   drawingContext.setLineDash([]); // reset into "solid line" mode
+}
+
 function draw() {
   background(0.99*255);
   //draw category circles
@@ -657,6 +663,18 @@ function draw() {
           item.catLineEndPts[j].y);
       }
 
+      //if that item is outside the category circle,
+      //draw a dashed line back to the item's primary category
+      stroke(0, 0, 0, 0.8*255);
+
+      if(sq(item.coordinates.x-archive[category].coordinates.x)+
+      sq(item.coordinates.y-archive[category].coordinates.y)>sq(archive[category].diameter/2)){
+        linedash(item.coordinates.x,
+          item.coordinates.y,
+          archive[category].coordinates.x,
+          archive[category].coordinates.y,
+          [10, 5]);
+      }
       //if that item also shares a selected tag name, draw a colored line
       push();
 
