@@ -480,6 +480,28 @@ function mouseDragged(){
     }
   }
 
+  for (category in archive) {
+    const radius = archive[category].diameter/2;
+    const x = archive[category].coordinates.x;
+    const y = archive[category].coordinates.y;
+
+    for (let i=0; i<archive[category].items.length; i++){
+
+      const item = archive[category].items[i];
+      const itemRadius = itemDia/2;
+      const itemX = item.coordinates.x;
+      const itemY = item.coordinates.y;
+
+      //check if the click is inside the item
+      if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius+5)){
+        item.coordinates.x = mouseX;
+        item.coordinates.y = mouseY;
+      }
+    }
+
+
+  }
+
 }
 
 function mouseClicked(){
