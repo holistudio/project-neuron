@@ -538,34 +538,34 @@ function mouseClicked(){
           mouseY > (categoryLabelY-(map(scale,0,1,42,72)/2))){
             displaySideForm('category',false,archive[category]);
       }
+      
+      let itemClicked = false;
+      //for each item in the category that the mouse cursor is in
+      for (let i=0; i<archive[category].items.length; i++){
+
+        const item = archive[category].items[i];
+        const itemRadius = itemDia/2;
+        const itemX = item.coordinates.x;
+        const itemY = item.coordinates.y;
+
+        //check if the click is inside the item
+        if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius)){
+          itemClicked = true;
+          if (item.active) {
+            //deactivate if the item is already active
+            item.active=false;
+          }
+          else{
+            //if the item is clicked
+            //activate the item
+            item.active=true;
+            displaySideForm('item',false,item);
+          }
+        }
+      }
 
       //if the mouseclick is inside a category circle
       if(sq(x-mouseX)+sq(y-mouseY)<sq(radius)){
-        let itemClicked = false;
-        //for each item in the category that the mouse cursor is in
-        for (let i=0; i<archive[category].items.length; i++){
-
-          const item = archive[category].items[i];
-          const itemRadius = itemDia/2;
-          const itemX = item.coordinates.x;
-          const itemY = item.coordinates.y;
-
-          //check if the click is inside the item
-          if(sq(itemX-mouseX)+sq(itemY-mouseY)<sq(itemRadius)){
-            itemClicked = true;
-            if (item.active) {
-              //deactivate if the item is already active
-              item.active=false;
-            }
-            else{
-              //if the item is clicked
-              //activate the item
-              item.active=true;
-              displaySideForm('item',false,item);
-            }
-          }
-        }
-
         //if the item isn't clicked
         if(!itemClicked){
           // if the category is active
