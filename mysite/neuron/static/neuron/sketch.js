@@ -101,43 +101,55 @@ let tagDisplayStart;
 let tagDisplaySpace;
 let tDUnitWidth;
 
-function displayItemSideForm (item){
-  //display item form and side form overlay while hiding the category form
-  document.querySelector('#side-form-overlay').style.display = "block";
-  document.querySelector('#item-form').style.display = "block";
-  document.querySelector('#category-form').style.display = "none";
-  //show delete button
-  document.querySelectorAll('.delete-button').forEach( (b) => {
-    b.style.display="block";
-  });
+function displaySideForm(formType, formNew, obj){
+  console.log('in new function')
+  //formType is type of form (item, category, etc)
+  //formNew is a boolean, true if for a new item or category
+  //obj is the object to be updated, (archive[category] or item )
+  let formQuerySelector=`#${formType}-form`;
+  if(formType=='item'){
+    //display item form and side form overlay while hiding the category form
+    document.querySelector('#side-form-overlay').style.display = "block";
+    document.querySelector('#item-form').style.display = "block";
+    document.querySelector('#category-form').style.display = "none";
 
-  const form = document.querySelector('#item-form').children;
-  for (let i = 0; i < form.length; i++) {
-    //for each child of div side-form-content, get the first element with class "editable"
-    const formElement = form[i].firstElementChild;
-    if (formElement != undefined){
-      if(formElement.classList.contains('editable')){
-        //get that element's id (author, notes, etc)
-        const key = formElement.name.split('_')[1];
+  }
+  if(formNew){
+    //if the form  is for something new, hide the delete button.
+  }
+  else{
+    document.querySelectorAll('.delete-button').forEach( (b) => {
+      b.style.display="block";
+    });
+    const form = document.querySelector(formQuerySelector).children;
+    for (let i = 0; i < form.length; i++) {
+      //for each child of div side-form-content, get the first element with class "editable"
+      const formElement = form[i].firstElementChild;
+      if (formElement != undefined){
+        if(formElement.classList.contains('editable')){
+          //get that element's id (author, notes, etc)
+          const key = formElement.name.split('_')[1];
 
-        //fill in the form with the existing item's data
-        if (item[key] != undefined) {
-          if(key=='notes' || key =='description'){
-            formElement.innerHTML=`${item[key]}`;
-          }
-          else{
-            formElement.value=`${item[key]}`;
+          //fill in the form with the existing item's data
+          if (obj[key] != undefined) {
+            if(key=='notes' || key =='description'){
+              formElement.innerHTML=`${obj[key]}`;
+            }
+            else{
+              formElement.value=`${obj[key]}`;
+            }
           }
         }
-      }
-      else{
-        //Change submit button's text to 'Update Item'
-        if (formElement.name=='submit_button'){
-          formElement.innerHTML= 'Update Item';
+        else{
+          //Change submit button's text to 'Update Item'
+          if (formElement.name=='submit_button'){
+            formElement.innerHTML= `Update ${formType}`;
+          }
         }
       }
     }
   }
+
 }
 document.addEventListener('DOMContentLoaded', () => {
   var overlay = document.getElementById('side-form-overlay');
@@ -557,7 +569,7 @@ function mouseClicked(){
                   link.innerHTML = title;
                   link.href = '#'
                   bullet.onclick = () => {
-                    displayItemSideForm(item);
+                    displaySideForm('item',false,item);
                   };
                   bullet.appendChild(link);
                   formElement.appendChild(bullet);
@@ -628,10 +640,8 @@ function mouseClicked(){
                   }
                 }
               }
-
             }
           }
-
         }
 
         //if the item isn't clicked
