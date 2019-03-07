@@ -105,24 +105,47 @@ function displaySideForm(formType, formNew, obj){
   console.log('in displaySideForm')
   //formType is type of form (item, category, etc)
   //formNew is a boolean, true if for a new item or category
-  //obj is the object to be updated, (archive[category] or item )
+  //obj is the object to be updated, (archive[category] or item)
   let formQuerySelector=`#${formType}-form`;
   let maxID;
+  let submitButtonText='';
+
+  document.querySelector('#side-form-overlay').style.display = "block";
 
   if(formType=='item'){
     //display item form and side form overlay while hiding the category form
-    document.querySelector('#side-form-overlay').style.display = "block";
     document.querySelector('#item-form').style.display = "block";
     document.querySelector('#category-form').style.display = "none";
+
   }
   if(formType=='category'){
     //show the category form, hide the item form
-    document.querySelector('#side-form-overlay').style.display = "block";
     document.querySelector('#item-form').style.display = "none";
     document.querySelector('#category-form').style.display = "block";
+  }
 
-    if(!formNew){
-      //List links to the items in that category
+  if(formNew){
+    if(formType=='item'){
+      maxID = maxItemID;
+    }
+    if(formType=='category'){
+      maxID = maxCategoryID;
+    }
+
+    submitButtonText = 'Add';
+
+    document.querySelectorAll('.delete-button').forEach( (b) => {
+      b.style.display="none";
+    });
+  }
+  else{
+    document.querySelectorAll('.delete-button').forEach( (b) => {
+      b.style.display="block";
+    });
+
+    submitButtonText = 'Update';
+
+    if(formType=='category'){
       for (let j = 0; j < obj.items.length; j++) {
         const item = obj.items[j]
         const title = obj.items[j].title;
@@ -138,26 +161,17 @@ function displaySideForm(formType, formNew, obj){
       }
     }
   }
-  if(formNew){
-    if(formType=='item'){
-      maxID = maxItemID;
-    }
-    if(formType=='category'){
-      maxID = maxCategoryID;
-    }
-    document.querySelectorAll('.delete-button').forEach( (b) => {
-      b.style.display="none";
-    });
 
-    const form = document.querySelector(formQuerySelector).children;
-    for (let i = 0; i < form.length; i++) {
-      //for each child of div side-form-content, get the first element
-      // with class "editable"
-      const formElement = form[i].firstElementChild;
-      if (formElement != undefined){
-        if(formElement.classList.contains('editable')){
-          //clear input boxes
-          const key = formElement.name.split('_')[1];
+  const form = document.querySelector(formQuerySelector).children;
+  for (let i = 0; i < form.length; i++) {
+    //for each child of div side-form-content, get the first element with class "editable"
+    const formElement = form[i].firstElementChild;
+    if (formElement != undefined){
+      if(formElement.classList.contains('editable')){
+        //get that element's name (author, notes, etc)
+        const key = formElement.name.split('_')[1];
+
+        if(formNew){
           if(key=='notes' || key =='description'){
             formElement.innerHTML='';
           }
@@ -170,28 +184,6 @@ function displaySideForm(formType, formNew, obj){
           }
         }
         else{
-          //Change button's text to 'Add Button'
-          if (formElement.name=='submit_button'){
-            formElement.innerHTML= `Add ${formType}`;
-          }
-        }
-
-      }
-    }
-  }
-  else{
-    document.querySelectorAll('.delete-button').forEach( (b) => {
-      b.style.display="block";
-    });
-    const form = document.querySelector(formQuerySelector).children;
-    for (let i = 0; i < form.length; i++) {
-      //for each child of div side-form-content, get the first element with class "editable"
-      const formElement = form[i].firstElementChild;
-      if (formElement != undefined){
-        if(formElement.classList.contains('editable')){
-          //get that element's id (author, notes, etc)
-          const key = formElement.name.split('_')[1];
-
           //fill in the form with the existing item's data
           if (obj[key] != undefined) {
             if(key=='notes' || key =='description'){
@@ -202,16 +194,15 @@ function displaySideForm(formType, formNew, obj){
             }
           }
         }
-        else{
-          //Change submit button's text to 'Update Item'
-          if (formElement.name=='submit_button'){
-            formElement.innerHTML= `Update ${formType}`;
-          }
+      }
+      else{
+        //Change submit button's text as appropriate
+        if (formElement.name=='submit_button'){
+          formElement.innerHTML= `${submitButtonText} ${formType}`;
         }
       }
     }
   }
-
 }
 document.addEventListener('DOMContentLoaded', () => {
   var overlay = document.getElementById('side-form-overlay');
