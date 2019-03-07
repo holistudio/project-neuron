@@ -107,6 +107,8 @@ function displaySideForm(formType, formNew, obj){
   //formNew is a boolean, true if for a new item or category
   //obj is the object to be updated, (archive[category] or item )
   let formQuerySelector=`#${formType}-form`;
+  let maxID;
+
   if(formType=='item'){
     //display item form and side form overlay while hiding the category form
     document.querySelector('#side-form-overlay').style.display = "block";
@@ -119,23 +121,63 @@ function displaySideForm(formType, formNew, obj){
     document.querySelector('#item-form').style.display = "none";
     document.querySelector('#category-form').style.display = "block";
 
-    //List links to the items in that category
-    for (let j = 0; j < obj.items.length; j++) {
-      const item = obj.items[j]
-      const title = obj.items[j].title;
-      const bullet = document.createElement('li');
-      const link = document.createElement('a');
-      link.innerHTML = title;
-      link.href = '#'
-      bullet.onclick = () => {
-        displaySideForm('item',false,item);
-      };
-      bullet.appendChild(link);
-      document.querySelector('#item-list').appendChild(bullet);
+    if(!formNew){
+      //List links to the items in that category
+      for (let j = 0; j < obj.items.length; j++) {
+        const item = obj.items[j]
+        const title = obj.items[j].title;
+        const bullet = document.createElement('li');
+        const link = document.createElement('a');
+        link.innerHTML = title;
+        link.href = '#'
+        bullet.onclick = () => {
+          displaySideForm('item',false,item);
+        };
+        bullet.appendChild(link);
+        document.querySelector('#item-list').appendChild(bullet);
+      }
     }
   }
   if(formNew){
-    //if the form  is for something new, hide the delete button.
+    if(formType=='item'){
+      maxID = maxItemID;
+    }
+    if(formType=='category'){
+      maxID = maxCategoryID;
+    }
+    document.querySelectorAll('.delete-button').forEach( (b) => {
+      b.style.display="none";
+    });
+
+    const form = document.querySelector(formQuerySelector).children;
+    for (let i = 0; i < form.length; i++) {
+      //for each child of div side-form-content, get the first element
+      // with class "editable"
+      const formElement = form[i].firstElementChild;
+      if (formElement != undefined){
+        if(formElement.classList.contains('editable')){
+          //clear input boxes
+          const key = formElement.name.split('_')[1];
+          if(key=='notes' || key =='description'){
+            formElement.innerHTML='';
+          }
+          else if (key=='id') {
+            //assign new id
+            formElement.value=maxID+1;
+          }
+          else{
+            formElement.value='';
+          }
+        }
+        else{
+          //Change button's text to 'Add Button'
+          if (formElement.name=='submit_button'){
+            formElement.innerHTML= `Add ${formType}`;
+          }
+        }
+
+      }
+    }
   }
   else{
     document.querySelectorAll('.delete-button').forEach( (b) => {
@@ -461,73 +503,10 @@ function mouseClicked(){
             b.style.display="none";
           });
           if(buttons[i].name=='addItem'){
-            document.querySelector('#side-form-overlay').style.display = "block";
-            document.querySelector('#item-form').style.display = "block";
-            document.querySelector('#category-form').style.display = "none";
-            const form = document.querySelector('#item-form').children;
-
-            for (let i = 0; i < form.length; i++) {
-              //for each child of div side-form-content, get the first element
-              // with class "editable"
-              const formElement = form[i].firstElementChild;
-              if (formElement != undefined){
-                if(formElement.classList.contains('editable')){
-                  //clear input boxes
-                  const key = formElement.name.split('_')[1];
-                  if(key=='notes' || key =='description'){
-                    formElement.innerHTML='';
-                  }
-                  else if (key=='id') {
-                    formElement.value=maxItemID+1;
-                  }
-                  else{
-                    formElement.value='';
-                  }
-                }
-                else{
-                  //Change button's text to 'Add Button'
-                  if (formElement.name=='submit_button'){
-                    formElement.innerHTML= 'Add Item';
-                  }
-                }
-
-              }
-            }
-            //assign new id to this new add item form
+            displaySideForm('item',true,'n/a');
           }
           else if (buttons[i].name=='addCategory') {
-            document.querySelector('#side-form-overlay').style.display = "block";
-            document.querySelector('#item-form').style.display = "none";
-            document.querySelector('#category-form').style.display = "block";
-            const form = document.querySelector('#category-form').children;
-
-            for (let i = 0; i < form.length; i++) {
-              //for each child of div side-form-content, get the first element
-              // with class "editable"
-              const formElement = form[i].firstElementChild;
-              if (formElement != undefined){
-                if(formElement.classList.contains('editable')){
-                  //clear input boxes
-                  const key = formElement.name.split('_')[1];
-                  if(key=='notes' || key =='description'){
-                    formElement.innerHTML='';
-                  }
-                  else if (key=='id') {
-                    formElement.value=maxCategoryID+1;
-                  }
-                  else{
-                    formElement.value='';
-                  }
-                }
-                else{
-                  //Change button's text to 'Add Button'
-                  if (formElement.name=='submit_button'){
-                    formElement.innerHTML= 'Add Category';
-                  }
-                }
-
-              }
-            }
+            displaySideForm('category',true,'n/a');
           }
         }
     }
