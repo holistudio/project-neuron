@@ -16,6 +16,7 @@
       <circle cx="120" cy="60" r="10"></circle>
     </svg>
     <script type="text/javascript">
+      //FOR SOME REASON, d3 scripts have to be below all other DOM elements!
       var circles = d3.selectAll("circle");
       circles.style("fill", "steelblue");
       circles.attr("r", 30);
